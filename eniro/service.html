@@ -22,75 +22,46 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Parisienne&family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <!-- css -->
     <link rel="stylesheet" href="css/style.css" />
-    <!-- js -->
     <script src="js/main.js" defer></script>
   </head>
   <body class="js_body">
-    <!-- iridescent haze background -->
-    <div class="l_bg">
-      <canvas class="l_bg_canvas js_gl"></canvas>
-      <div class="l_bg_grid"></div>
-      <div class="l_bg_vignette"></div>
-      <div class="l_bg_grain"></div>
-    </div>
-    <!-- /.l_bg -->
-
-    <!-- opening / loader -->
     <div class="m_opening js_opening">
-      <div class="m_opening_logo"><img class="m_opening_logo_img" src="img/eniro.png" alt="ENIRO" /></div>
+      <div class="m_opening_logo">ENIRO</div>
       <div class="m_opening_bar"><i class="m_opening_bar-inner"></i></div>
     </div>
-    <!-- /.m_opening -->
 
     <header class="l_header js_header">
-      <a href="index.html#top" class="l_header-logo"><img class="l_header-logo_img" src="img/eniro.png" alt="ENIRO" /></a>
+      <a href="index.html#top" class="l_header-logo">ENIRO</a>
       <nav class="l_header-nav js_nav" aria-label="メインメニュー">
         <ul class="l_header-nav_list">
           <li class="l_header-nav_item">
-            <a href="index.html#about" class="l_header-nav_link">About</a>
+            <a href="index.html#about" class="l_header-nav_link">ABOUT</a>
           </li>
           <li class="l_header-nav_item">
-            <a href="index.html#concept" class="l_header-nav_link">Concept</a>
-          </li>
-          <li class="l_header-nav_item l_header-nav_item__sub">
-            <a href="service.html" class="l_header-nav_link">Service</a>
-            <ul class="l_header-nav_sub">
-              <li class="l_header-nav_sub_item">
-                <a href="service.html" class="l_header-nav_sub_link">
-                  作りたいものから選ぶ
-                </a>
-              </li>
-              <li class="l_header-nav_sub_item">
-                <a href="service_issue.html" class="l_header-nav_sub_link">
-                  課題から選ぶ
-                </a>
-              </li>
-            </ul>
+            <a href="index.html#service" class="l_header-nav_link">SERVICE</a>
           </li>
           <li class="l_header-nav_item">
-            <a href="index.html#works" class="l_header-nav_link">Works</a>
+            <a href="index.html#works" class="l_header-nav_link">WORKS</a>
           </li>
           <li class="l_header-nav_item">
-            <a href="index.html#strength" class="l_header-nav_link">Strength</a>
+            <a href="index.html#faq" class="l_header-nav_link">FAQ</a>
           </li>
           <li class="l_header-nav_item">
             <a href="index.html#contact" class="l_header-nav_link l_header-nav_link__cta">
-              Contact
+              CONTACT
             </a>
           </li>
         </ul>
       </nav>
-      <button class="m_hamburger js_hamburger" aria-label="メニュー">
+      <button class="m_hamburger js_hamburger" aria-label="メニュー" type="button">
         <span class="m_hamburger-bar"></span>
         <span class="m_hamburger-bar"></span>
       </button>
     </header>
-    <!-- /.l_header -->
 
     <main class="l_main">
       <div class="service_wrap">
@@ -388,38 +359,39 @@
     <footer class="l_footer">
       <div class="l_footer_contents l_container">
         <div class="l_footer-brand">
-          <p class="l_footer-logo"><img class="l_footer-logo_img" src="img/eniro.png" alt="ENIRO" /></p>
-          <p class="l_footer-tagline">Every color begins with a connection.</p>
+          <p class="l_footer-logo">ENIRO</p>
         </div>
         <nav class="l_footer-nav" aria-label="フッターメニュー">
           <ul class="l_footer-nav_list">
             <li class="l_footer-nav_item">
+              <span class="l_footer-nav_jp">ENIROについて</span>
               <a href="index.html#about" class="l_footer-nav_link">About</a>
             </li>
             <li class="l_footer-nav_item">
-              <a href="index.html#concept" class="l_footer-nav_link">Concept</a>
+              <span class="l_footer-nav_jp">サービス</span>
+              <a href="index.html#service" class="l_footer-nav_link">Service</a>
             </li>
             <li class="l_footer-nav_item">
-              <a href="service.html" class="l_footer-nav_link">Service</a>
-            </li>
-            <li class="l_footer-nav_item">
+              <span class="l_footer-nav_jp">制作実績</span>
               <a href="index.html#works" class="l_footer-nav_link">Works</a>
             </li>
             <li class="l_footer-nav_item">
-              <a href="index.html#strength" class="l_footer-nav_link">Strength</a>
+              <span class="l_footer-nav_jp">よくある質問</span>
+              <a href="index.html#faq" class="l_footer-nav_link">FAQ</a>
             </li>
             <li class="l_footer-nav_item">
+              <span class="l_footer-nav_jp">お問い合わせ</span>
               <a href="index.html#contact" class="l_footer-nav_link">Contact</a>
             </li>
           </ul>
         </nav>
-        <!-- /.l_footer-nav -->
+        <a href="#" class="l_footer-policy">Privacy policy</a>
       </div>
-      <!-- /.l_footer_contents -->
-      <p class="l_footer-copyright">
-        <small class="l_footer-copyright_txt">© 2026 ENIRO</small>
-      </p>
+      <div class="l_footer_bottom">
+        <p class="l_footer-copyright">
+          <small>Copyright © 2026 ENIRO, Ltd. All Rights Reserved.</small>
+        </p>
+      </div>
     </footer>
-    <!-- /.l_footer -->
   </body>
 </html>

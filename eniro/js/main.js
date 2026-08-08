@@ -41,7 +41,7 @@ navigation?.querySelectorAll('a').forEach((link) => {
   if (!floatBtn) return;
   const contactSection = document.querySelector('#contact');
   const fv = document.querySelector('#top');
-  const spMQ = matchMedia('(max-width: 820px)');
+  const spMQ = matchMedia('(max-width: 765px)');
 
   let contactInView = false;
   let fvInView = !!fv; // FV があれば初期は表示中とみなす（＝SPでは隠す）
@@ -156,7 +156,7 @@ document.querySelectorAll('.js_faq').forEach((item) => {
   const firstDup = track?.querySelector('.top_works_item[aria-hidden="true"]');
   if (!slider || !first || !firstDup) return;
 
-  const isSP = () => matchMedia('(max-width: 820px)').matches;
+  const isSP = () => matchMedia('(max-width: 765px)').matches;
   const loopW = () => Math.max(1, firstDup.offsetLeft - first.offsetLeft); // 1セット分の正確な幅
   const speed = 0.6; // px/frame
   let paused = false;
