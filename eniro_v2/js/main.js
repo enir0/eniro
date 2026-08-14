@@ -1,17 +1,19 @@
 'use strict';
 
-/*---------- オープニング / ローダー ----------*/
+/*---------- オープニング / ローダー（初回のみ） ----------*/
 const opening = document.querySelector('.js_opening');
-const openingBar = opening?.querySelector('.m_opening_bar-inner');
-if (openingBar) {
-  requestAnimationFrame(() => {
-    openingBar.style.transition = 'width 1s cubic-bezier(0.16, 1, 0.3, 1)';
-    openingBar.style.width = '100%';
-  });
+const hideOpening = () => {
+  opening?.classList.add('is-hidden');
+  try {
+    sessionStorage.setItem('eniro_opened', '1');
+  } catch (e) {}
+};
+if (document.documentElement.classList.contains('is-opened')) {
+  opening?.remove();
+} else {
+  window.addEventListener('load', () => setTimeout(hideOpening, 1400));
+  setTimeout(hideOpening, 2800);
 }
-const hideOpening = () => opening?.classList.add('is-hidden');
-window.addEventListener('load', () => setTimeout(hideOpening, 650));
-setTimeout(hideOpening, 2500);
 
 /*---------- ヘッダー（スクロール状態） ----------*/
 const header = document.querySelector('.js_header');

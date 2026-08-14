@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Contact｜お問い合わせ | ENIRO</title>
+    <meta
+      name="description"
+      content="ENIROへのお問い合わせ。Webサイトの制作・リニューアル・改善のご相談を無料でお受けします。"
+    />
+    <meta name="format-detection" content="telephone=no" />
+    <meta property="og:site_name" content="ENIRO" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Contact｜お問い合わせ | ENIRO" />
+    <meta
+      property="og:description"
+      content="Webサイトの制作・リニューアル・改善のご相談を無料でお受けします。まずはお気軽にお問い合わせください。"
+    />
+    <meta property="og:locale" content="ja_JP" />
+    <script>
+      try {
+        if (sessionStorage.getItem('eniro_opened')) {
+          document.documentElement.classList.add('is-opened');
+        }
+      } catch (e) {}
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="js/main.js" defer></script>
+  </head>
+  <body class="js_body">
+    <div class="m_opening js_opening">
+      <div class="m_opening_logo"><img src="img/opening-logo.svg" alt="ENIRO" class="m_opening_logo_img"></div>
+    </div>
+
+    <header class="l_header js_header">
+      <a href="index.html#top" class="l_header-logo"><img src="img/header_logo.svg" alt="ENIRO" class="l_header-logo_img" width="1386" height="246"></a>
+      <nav class="l_header-nav js_nav" aria-label="メインメニュー">
+        <ul class="l_header-nav_list">
+          <li class="l_header-nav_item">
+            <a href="index.html#about" class="l_header-nav_link">ABOUT</a>
+          </li>
+          <li class="l_header-nav_item l_header-nav_item__has-sub">
+            <a href="index.html#service" class="l_header-nav_link">SERVICE</a>
+            <ul class="l_header-nav_sub">
+              <li>
+                <a href="service.html" class="l_header-nav_sub_link">作りたいものから選ぶ</a>
+              </li>
+              <li>
+                <a href="service_issue.html" class="l_header-nav_sub_link">課題から選ぶ</a>
+              </li>
+            </ul>
+          </li>
+          <li class="l_header-nav_item">
+            <a href="index.html#works" class="l_header-nav_link">WORKS</a>
+          </li>
+          <li class="l_header-nav_item">
+            <a href="index.html#faq" class="l_header-nav_link">FAQ</a>
+          </li>
+          <li class="l_header-nav_item">
+            <a href="contact.html" class="l_header-nav_link l_header-nav_link__cta is-current">
+              CONTACT
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <button class="m_hamburger js_hamburger" aria-label="メニュー" type="button">
+        <span class="m_hamburger-bar"></span>
+        <span class="m_hamburger-bar"></span>
+      </button>
+    </header>
+
+    <main class="l_main">
+      <div class="contact_wrap">
+        <header class="contact_head m_reveal js_reveal">
+          <p class="m_section-jp">お問い合わせ</p>
+          <h1 class="m_section-title">Contact</h1>
+          <p class="contact_head_lead">
+            まずは、お気軽にご相談ください。
+          </p>
+          <p class="contact_head_desc">
+            Webサイトの改善点や課題を、無料で診断します。新規制作・リニューアルをお考えの方も、
+            いまの状況を伺いながら、次の一歩をご提案します。
+          </p>
+        </header>
+
+        <form
+          class="contact_form m_reveal m_reveal__d1 js_reveal"
+          action="mailto:hello@eniro.example"
+          method="post"
+          enctype="text/plain"
+        >
+          <div class="top_contact_fields">
+            <label class="top_contact_field">
+              <span>お名前</span>
+              <input type="text" name="name" autocomplete="name" required />
+            </label>
+            <label class="top_contact_field">
+              <span>メールアドレス</span>
+              <input type="email" name="email" autocomplete="email" required />
+            </label>
+            <label class="top_contact_field top_contact_field__full">
+              <span>会社名・屋号（任意）</span>
+              <input type="text" name="company" autocomplete="organization" />
+            </label>
+            <label class="top_contact_field top_contact_field__full">
+              <span>ご相談内容</span>
+              <textarea name="message" rows="6" required></textarea>
+            </label>
+          </div>
+          <p class="contact_form_note">
+            ※送信後、内容を確認のうえご連絡いたします。通常2〜3営業日以内にご返信します。
+          </p>
+          <div class="top_contact_cta">
+            <button class="m_btn m_btn__fill" type="submit">
+              <span>Send</span>
+              <span class="m_btn_icon" aria-hidden="true">
+                <img src="img/ellipse.svg" alt="" width="39" height="39" />
+                <img class="m_btn_icon_arrow" src="img/arrow.svg" alt="" width="18" height="11" />
+              </span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <footer class="l_footer">
+      <div class="l_footer_contents l_container">
+        <div class="l_footer-brand">
+          <p class="l_footer-logo"><img src="img/header_logo.svg" alt="ENIRO" class="l_footer-logo_img" width="1386" height="246"></p>
+          <p class="l_footer-tagline">Every color begins with a connection.</p>
+        </div>
+        <nav class="l_footer-nav" aria-label="フッターメニュー">
+          <ul class="l_footer-nav_list">
+            <li class="l_footer-nav_item">
+              <span class="l_footer-nav_jp">ENIROについて</span>
+              <a href="index.html#about" class="l_footer-nav_link">About</a>
+            </li>
+            <li class="l_footer-nav_item">
+              <span class="l_footer-nav_jp">サービス</span>
+              <a href="index.html#service" class="l_footer-nav_link">Service</a>
+            </li>
+            <li class="l_footer-nav_item">
+              <span class="l_footer-nav_jp">制作実績</span>
+              <a href="index.html#works" class="l_footer-nav_link">Works</a>
+            </li>
+            <li class="l_footer-nav_item">
+              <span class="l_footer-nav_jp">よくある質問</span>
+              <a href="index.html#faq" class="l_footer-nav_link">FAQ</a>
+            </li>
+            <li class="l_footer-nav_item">
+              <span class="l_footer-nav_jp">お問い合わせ</span>
+              <a href="contact.html" class="l_footer-nav_link">Contact</a>
+            </li>
+          </ul>
+        </nav>
+        <a href="#" class="l_footer-policy">Privacy policy</a>
+      </div>
+      <div class="l_footer_bottom">
+        <p class="l_footer-copyright">
+          <small>Copyright © 2026 ENIRO, Ltd. All Rights Reserved.</small>
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

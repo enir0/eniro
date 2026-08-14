@@ -6,7 +6,7 @@
     <title>ENIRO | あなたの色を、新しい縁へ。</title>
     <meta
       name="description"
-      content="ENIROは、「縁（EN）」と「色（IRO）」から生まれたWeb制作ブランド。一つひとつの縁を大切に、あなたらしい色をWebという形で届けます。"
+      content="ENIROは、「縁（EN）」と「色（IRO）」から生まれた、Webに関することをまるごと相談できるパートナー。制作だけでなく、方針から運用までお任せいただけます。"
     />
     <meta name="format-detection" content="telephone=no" />
     <meta property="og:site_name" content="ENIRO" />
@@ -14,9 +14,16 @@
     <meta property="og:title" content="ENIRO | あなたの色を、新しい縁へ。" />
     <meta
       property="og:description"
-      content="一つひとつの縁から、あなたらしさを形にする。ENIROは、あなたの想いや魅力を必要な人へ届けるWebサイトをつくります。"
+      content="つくるだけではなく、Webのこれからを一緒に考える。ENIROは、Webに関することをまるごとお任せいただけるパートナーです。"
     />
     <meta property="og:locale" content="ja_JP" />
+    <script>
+      try {
+        if (sessionStorage.getItem('eniro_opened')) {
+          document.documentElement.classList.add('is-opened');
+        }
+      } catch (e) {}
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -32,8 +39,7 @@
   </head>
   <body class="js_body">
     <div class="m_opening js_opening">
-      <div class="m_opening_logo"><img src="img/logo.svg" alt="ENIRO" class="m_opening_logo_img"></div>
-      <div class="m_opening_bar"><i class="m_opening_bar-inner"></i></div>
+      <div class="m_opening_logo"><img src="img/opening-logo.svg" alt="ENIRO" class="m_opening_logo_img"></div>
     </div>
 
     <header class="l_header js_header">
@@ -43,8 +49,16 @@
           <li class="l_header-nav_item">
             <a href="#about" class="l_header-nav_link">ABOUT</a>
           </li>
-          <li class="l_header-nav_item">
+          <li class="l_header-nav_item l_header-nav_item__has-sub">
             <a href="#service" class="l_header-nav_link">SERVICE</a>
+            <ul class="l_header-nav_sub">
+              <li>
+                <a href="service.html" class="l_header-nav_sub_link">作りたいものから選ぶ</a>
+              </li>
+              <li>
+                <a href="service_issue.html" class="l_header-nav_sub_link">課題から選ぶ</a>
+              </li>
+            </ul>
           </li>
           <li class="l_header-nav_item">
             <a href="#works" class="l_header-nav_link">WORKS</a>
@@ -53,7 +67,7 @@
             <a href="#faq" class="l_header-nav_link">FAQ</a>
           </li>
           <li class="l_header-nav_item">
-            <a href="#contact" class="l_header-nav_link l_header-nav_link__cta">
+            <a href="contact.html" class="l_header-nav_link l_header-nav_link__cta">
               CONTACT
             </a>
           </li>
@@ -72,13 +86,13 @@
         </svg>
       </div>
       <div class="eniro-line eniro-line--02">
-        <svg viewBox="0 0 1440 2925" fill="none" xmlns="http://www.w3.org/2000/svg" overflow="visible" preserveAspectRatio="xMinYMin meet">
-          <path class="eniro-line__path" d="M1503.5 0.941116C1503.5 0.941116 522 340.442 215.498 504.94C-91.0047 669.439 -279.889 831.205 -72.5021 1124.94C134.885 1418.68 1310.5 1416.94 722.999 1814.44C135.5 2211.94 1722.5 2923.94 1722.5 2923.94" stroke="#d4a3a3" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"  />
+        <svg viewBox="0 0 2053 3198" fill="none" xmlns="http://www.w3.org/2000/svg" overflow="visible" preserveAspectRatio="xMinYMin meet">
+          <path class="eniro-line__path" d="M0.378102 3196.46C0.378102 3196.46 1297.21 2650.03 1651.88 2353.96C2006.54 2057.88 2119.89 2113.46 2012.88 1738.96C1905.87 1364.46 486.785 1825.45 1162.18 1157.41C1837.57 489.364 154.384 0.954643 154.384 0.954643" stroke="#d4a3a3" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </div>
       <div class="eniro-line eniro-line--04">
-        <svg viewBox="0 0 1894 2145" fill="none" xmlns="http://www.w3.org/2000/svg" overflow="visible" preserveAspectRatio="xMinYMin meet">
-          <path class="eniro-line__path" d="M1893.19 16.9867C1744.37 -113.367 827.091 582.452 765.382 1049.3C703.673 1516.15 1147.98 935.942 1333.11 1129.79C1518.23 1323.64 640.488 2021.38 0.1875 2143.98" stroke="#d4a3a3" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"  />
+        <svg viewBox="0 0 2407 2441" fill="none" xmlns="http://www.w3.org/2000/svg" overflow="visible" preserveAspectRatio="xMinYMin meet">
+          <path class="eniro-line__path" d="M2406.19 13.9615C2257.37 -116.393 827.091 768.415 765.382 1235.27C703.673 1702.12 1147.98 1231.21 1333.11 1425.06C1518.23 1618.91 640.488 2316.65 0.1875 2439.25" stroke="#d4a3a3" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
           <circle class="eniro-line__dot" r="3.5" fill="#d4a3a3" />
         </svg>
       </div>
@@ -172,21 +186,21 @@
             </div>
             <div class="top_about_body">
               <h3 class="top_about_lead m_reveal js_reveal">
-                それぞれの魅力を引き出し、<br />
-                Webという形で届ける。
+                つくるだけではなく、<br />
+                Webのこれからを一緒に考える。
               </h3>
               <div class="top_about_txt m_reveal m_reveal__d1 js_reveal">
                 <p>
-                  ENIROは、「縁（EN）」と「色（IRO）」から生まれたWeb制作ブランドです。
+                  ENIROは、「縁（EN）」と「色（IRO）」から生まれました。サイトをつくることだけでなく、Webに関することをまるごとお任せいただけるパートナーでありたいと考えています。
                 </p>
                 <p>
-                  人や企業、サービスには、それぞれにしかない想いや個性があります。<br />
-                  その背景にある魅力を丁寧に汲み取り、その人らしい「色」をWebサイトとして表現します。
+                  人や企業、サービスにはそれぞれにしかない想いや個性があります。<br />
+                  その「色」をどう届けるか、誰と新しい「縁」を結ぶか。<br />
+                  目的や課題から一緒に整理し、方針をご提案します。
                 </p>
                 <p>
-                  Webサイトを通して新しい出会いが生まれ、その出会いがまた次の「縁」へとつながっていく。<br />
-                  一つひとつの想いに向き合い、魅力が伝わるWebサイトを。<br />
-                  ENIROは、「縁」と「色」のつながりを大切にしています。
+                  制作・デザイン・実装・LINE・公開後の運用まで。Webにまつわることを途切れなくお任せください。<br />
+                  一つひとつの縁を大切に、あなたらしい色が届く状態をつくります。
                 </p>
               </div>
             </div>
@@ -202,8 +216,8 @@
             </h2>
             <div class="top_service_main">
               <p class="top_service_lead m_reveal js_reveal">
-                ヒアリングから制作・実装まで一貫対応。<br />
-                見た目だけではなく、想いが伝わるWebサイトを形にします。
+                相談から制作・運用まで、Webに関することを一貫して伴走。<br />
+                見た目だけではなく、これからを一緒に考えるパートナーです。
               </p>
               <ul class="top_service_list">
                 <li class="top_service_item m_reveal m_reveal__d1 js_reveal">
@@ -315,6 +329,40 @@
                 </a>
               </li>
             </ul>
+            <div class="top_works_nda">
+              <p class="top_works_nda_lead m_reveal js_reveal">
+                契約上の都合により詳細を公開できない案件を含みますが、さまざまな業界のWeb制作・コーディングに携わっています。
+              </p>
+              <dl class="top_works_nda_list m_reveal m_reveal__d1 js_reveal">
+                <div class="top_works_nda_item">
+                  <dt>教育関連サービス</dt>
+                  <dd>Webサイト制作・改修</dd>
+                </div>
+                <div class="top_works_nda_item">
+                  <dt>大手通信サービス</dt>
+                  <dd>LP制作</dd>
+                </div>
+                <div class="top_works_nda_item">
+                  <dt>リユース関連サービス</dt>
+                  <dd>Webサイト制作・改修</dd>
+                </div>
+                <div class="top_works_nda_item">
+                  <dt>モビリティ関連サービス</dt>
+                  <dd>Webサイト制作・改修</dd>
+                </div>
+                <div class="top_works_nda_item">
+                  <dt>人材関連サービス</dt>
+                  <dd>Webサイト制作・改修</dd>
+                </div>
+                <div class="top_works_nda_item">
+                  <dt>住宅・エネルギー関連サービス</dt>
+                  <dd>Webサイト制作・改修</dd>
+                </div>
+              </dl>
+              <p class="top_works_nda_note m_reveal m_reveal__d1 js_reveal">
+                ※守秘義務および契約上の都合により、一部案件の企業名・サービス名・制作物は非公開としています。
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -591,14 +639,8 @@
               まずはお気軽にご相談ください。
             </p>
           </div>
-          <div class="m_subsidy top_contact_subsidy m_reveal m_reveal__d1 js_reveal">
-            <p class="m_subsidy_label"><span class="m_subsidy_mark" aria-hidden="true"></span>補助金について</p>
-            <p class="m_subsidy_txt">
-              ホームページ制作をご検討の方へ。小規模事業者持続化補助金などをご利用いただける場合があります。事業内容や公募時期によって対象となるか異なりますので、お気軽にご相談ください。
-            </p>
-          </div>
-          <div class="top_contact_cta m_reveal m_reveal__d2 js_reveal">
-            <a href="mailto:hello@eniro.example" class="m_btn m_btn__fill">
+          <div class="top_contact_cta m_reveal m_reveal__d1 js_reveal">
+            <a href="contact.html" class="m_btn m_btn__fill">
               <span>Contact Form</span>
               <span class="m_btn_icon" aria-hidden="true">
                 <img src="img/ellipse.svg" alt="" width="39" height="39" />
@@ -636,7 +678,7 @@
             </li>
             <li class="l_footer-nav_item">
               <span class="l_footer-nav_jp">お問い合わせ</span>
-              <a href="#contact" class="l_footer-nav_link">Contact</a>
+              <a href="contact.html" class="l_footer-nav_link">Contact</a>
             </li>
           </ul>
         </nav>

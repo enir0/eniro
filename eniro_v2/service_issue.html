@@ -9,7 +9,6 @@
       content="ENIRO のサービス一覧。集客・採用・ブランド統一・リニューアル・CMS・ECまで、今ある課題から必要な打ち手を選べます。"
     />
     <meta name="format-detection" content="telephone=no" />
-    <!-- ogp -->
     <meta property="og:site_name" content="ENIRO" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Service｜課題から選ぶ | ENIRO" />
@@ -18,7 +17,13 @@
       content="集客・採用・ブランド統一・リニューアル・CMS・ECまで、今ある課題から選べる ENIRO のサービス。"
     />
     <meta property="og:locale" content="ja_JP" />
-    <!-- google fonts -->
+    <script>
+      try {
+        if (sessionStorage.getItem('eniro_opened')) {
+          document.documentElement.classList.add('is-opened');
+        }
+      } catch (e) {}
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -30,19 +35,26 @@
   </head>
   <body class="js_body">
     <div class="m_opening js_opening">
-      <div class="m_opening_logo"><img src="img/logo.png" alt="ENIRO" class="m_opening_logo_img"></div>
-      <div class="m_opening_bar"><i class="m_opening_bar-inner"></i></div>
+      <div class="m_opening_logo"><img src="img/opening-logo.svg" alt="ENIRO" class="m_opening_logo_img"></div>
     </div>
 
     <header class="l_header js_header">
-      <a href="index.html#top" class="l_header-logo"><img src="img/logo.png" alt="ENIRO" class="l_header-logo_img"></a>
+      <a href="index.html#top" class="l_header-logo"><img src="img/header_logo.svg" alt="ENIRO" class="l_header-logo_img" width="1386" height="246"></a>
       <nav class="l_header-nav js_nav" aria-label="メインメニュー">
         <ul class="l_header-nav_list">
           <li class="l_header-nav_item">
             <a href="index.html#about" class="l_header-nav_link">ABOUT</a>
           </li>
-          <li class="l_header-nav_item">
-            <a href="index.html#service" class="l_header-nav_link">SERVICE</a>
+          <li class="l_header-nav_item l_header-nav_item__has-sub">
+            <a href="index.html#service" class="l_header-nav_link is-current">SERVICE</a>
+            <ul class="l_header-nav_sub">
+              <li>
+                <a href="service.html" class="l_header-nav_sub_link">作りたいものから選ぶ</a>
+              </li>
+              <li>
+                <a href="service_issue.html" class="l_header-nav_sub_link is-current">課題から選ぶ</a>
+              </li>
+            </ul>
           </li>
           <li class="l_header-nav_item">
             <a href="index.html#works" class="l_header-nav_link">WORKS</a>
@@ -51,7 +63,7 @@
             <a href="index.html#faq" class="l_header-nav_link">FAQ</a>
           </li>
           <li class="l_header-nav_item">
-            <a href="index.html#contact" class="l_header-nav_link l_header-nav_link__cta">
+            <a href="contact.html" class="l_header-nav_link l_header-nav_link__cta">
               CONTACT
             </a>
           </li>
@@ -65,13 +77,12 @@
 
     <main class="l_main">
       <div class="service_wrap">
-        <!-- 左：固定ナビ（インデックス） -->
         <aside class="service_nav">
           <div class="service_switch">
             <a href="service.html" class="service_switch_link">作りたいものから選ぶ</a>
             <a href="service_issue.html" class="service_switch_link is-active">課題から選ぶ</a>
           </div>
-          <p class="m_section-label service_nav_label">Service</p>
+          <p class="m_section-jp service_nav_label">サービス</p>
           <ul class="service_nav_list">
             <li>
               <a href="#s01" class="service_nav_link is-active">
@@ -98,49 +109,38 @@
                 <span class="service_nav_no">05</span>自分で更新したい
               </a>
             </li>
-            <!-- ネットショップ(EC)は現在対応していないため一時的に非表示。再開時はこの<li>を有効化してください
             <li>
-              <a href="#sEC" class="service_nav_link">
-                <span class="service_nav_no">--</span>ネットで販売したい
+              <a href="#s06" class="service_nav_link">
+                <span class="service_nav_no">06</span>LINEでつながりたい
               </a>
             </li>
-            -->
           </ul>
-          <a href="index.html#contact" class="m_btn m_btn__fill service_nav_cta">
-            お問い合わせ →
-          </a>
+          <a href="contact.html" class="service_nav_cta">Contact</a>
         </aside>
-        <!-- /.service_nav -->
 
-        <!-- 右：スクロールする本文 -->
         <div class="service_body">
           <header class="service_head m_reveal js_reveal">
-            <p class="m_section-label">Service</p>
-            <h1 class="service_head_title">
+            <p class="m_section-jp">サービス</p>
+            <h1 class="m_section-title">Service</h1>
+            <p class="service_head_lead">
               困りごとから、<em>選ぶ。</em>
-            </h1>
+            </p>
             <p class="service_head_desc">
               「うまくいっていない気がする」から始めてOKです。今の困りごとに近いものを選ぶだけで大丈夫。
               あとは一緒に整理しながら、必要なことをご提案します。
             </p>
             <p class="service_note">
-              ※料金・期間はおおよその目安です。状況やご要望に応じて、ご予算に合わせてご相談いただけます。
+              ※料金は、方針の整理・ご提案からデザイン・実装まで含む包括価格です。期間はおおよその目安で、状況やご要望に応じてご相談いただけます。
             </p>
-            <div class="m_subsidy m_reveal js_reveal">
-              <p class="m_subsidy_label">補助金について</p>
-              <p class="m_subsidy_txt">
-                ホームページ制作をご検討の方へ。小規模事業者持続化補助金などをご利用いただける場合があります。事業内容や公募時期によって対象となるか異なりますので、お気軽にご相談ください。
-              </p>
-            </div>
-            <!-- /.m_subsidy -->
           </header>
-          <!-- /.service_head -->
 
           <div class="service_list">
-            <!-- 01 -->
             <section id="s01" class="service_item m_reveal js_reveal">
-              <span class="service_item_no">01</span>
-              <h2 class="service_item_name">問い合わせを増やしたい</h2>
+              <div class="top_service_item_line" aria-hidden="true"></div>
+              <div class="service_item_head">
+                <span class="service_item_no">01</span>
+                <h2 class="service_item_name">問い合わせを増やしたい</h2>
+              </div>
               <p class="service_item_en">Attract / Inquiry</p>
               <p class="service_item_for">
                 <b>こんな方に</b>サイトはあるのに問い合わせが来ない／もっと知ってもらいたい
@@ -156,21 +156,22 @@
               </ul>
               <div class="service_item_meta">
                 <div>
-                  <span class="service_item_meta_term">料金</span>
+                  <span class="service_item_meta_term">包括料金</span>
                   <span class="service_item_meta_data">30万円〜</span>
                 </div>
                 <div>
                   <span class="service_item_meta_term">期間</span>
-                  <span class="service_item_meta_data">約1〜2.5ヶ月</span>
+                  <span class="service_item_meta_data">約1〜1.5ヶ月</span>
                 </div>
               </div>
             </section>
-            <!-- /#s01 -->
 
-            <!-- 02 -->
             <section id="s02" class="service_item m_reveal js_reveal">
-              <span class="service_item_no">02</span>
-              <h2 class="service_item_name">採用の応募を増やしたい</h2>
+              <div class="top_service_item_line" aria-hidden="true"></div>
+              <div class="service_item_head">
+                <span class="service_item_no">02</span>
+                <h2 class="service_item_name">採用の応募を増やしたい</h2>
+              </div>
               <p class="service_item_en">Recruit</p>
               <p class="service_item_for">
                 <b>こんな方に</b>応募が集まらない／どんな会社か伝わっていない
@@ -186,21 +187,22 @@
               </ul>
               <div class="service_item_meta">
                 <div>
-                  <span class="service_item_meta_term">料金</span>
+                  <span class="service_item_meta_term">包括料金</span>
                   <span class="service_item_meta_data">50万円〜</span>
                 </div>
                 <div>
                   <span class="service_item_meta_term">期間</span>
-                  <span class="service_item_meta_data">約2〜3ヶ月</span>
+                  <span class="service_item_meta_data">約1〜2ヶ月</span>
                 </div>
               </div>
             </section>
-            <!-- /#s02 -->
 
-            <!-- 03 -->
             <section id="s03" class="service_item m_reveal js_reveal">
-              <span class="service_item_no">03</span>
-              <h2 class="service_item_name">全体の印象を統一したい</h2>
+              <div class="top_service_item_line" aria-hidden="true"></div>
+              <div class="service_item_head">
+                <span class="service_item_no">03</span>
+                <h2 class="service_item_name">全体の印象を統一したい</h2>
+              </div>
               <p class="service_item_en">Branding</p>
               <p class="service_item_for">
                 <b>こんな方に</b>媒体ごとに見た目がバラバラ／全体の印象を整えたい
@@ -216,21 +218,22 @@
               </ul>
               <div class="service_item_meta">
                 <div>
-                  <span class="service_item_meta_term">料金</span>
+                  <span class="service_item_meta_term">包括料金</span>
                   <span class="service_item_meta_data">35万円〜</span>
                 </div>
                 <div>
                   <span class="service_item_meta_term">期間</span>
-                  <span class="service_item_meta_data">約1〜2.5ヶ月</span>
+                  <span class="service_item_meta_data">約1〜1.5ヶ月</span>
                 </div>
               </div>
             </section>
-            <!-- /#s03 -->
 
-            <!-- 04 -->
             <section id="s04" class="service_item m_reveal js_reveal">
-              <span class="service_item_no">04</span>
-              <h2 class="service_item_name">古いサイトをリニューアルしたい</h2>
+              <div class="top_service_item_line" aria-hidden="true"></div>
+              <div class="service_item_head">
+                <span class="service_item_no">04</span>
+                <h2 class="service_item_name">古いサイトをリニューアルしたい</h2>
+              </div>
               <p class="service_item_en">Renewal</p>
               <p class="service_item_for">
                 <b>こんな方に</b>スマホで見づらい／情報が古い／自分で直せない
@@ -246,21 +249,22 @@
               </ul>
               <div class="service_item_meta">
                 <div>
-                  <span class="service_item_meta_term">料金</span>
+                  <span class="service_item_meta_term">包括料金</span>
                   <span class="service_item_meta_data">45万円〜</span>
                 </div>
                 <div>
                   <span class="service_item_meta_term">期間</span>
-                  <span class="service_item_meta_data">約2〜3.5ヶ月</span>
+                  <span class="service_item_meta_data">約1〜2.5ヶ月</span>
                 </div>
               </div>
             </section>
-            <!-- /#s04 -->
 
-            <!-- 05 -->
             <section id="s05" class="service_item m_reveal js_reveal">
-              <span class="service_item_no">05</span>
-              <h2 class="service_item_name">自分たちで更新できるようにしたい</h2>
+              <div class="top_service_item_line" aria-hidden="true"></div>
+              <div class="service_item_head">
+                <span class="service_item_no">05</span>
+                <h2 class="service_item_name">自分たちで更新できるようにしたい</h2>
+              </div>
               <p class="service_item_en">CMS</p>
               <p class="service_item_for">
                 <b>こんな方に</b>更新のたびに外注している／お知らせを自分で出したい
@@ -276,90 +280,66 @@
               </ul>
               <div class="service_item_meta">
                 <div>
-                  <span class="service_item_meta_term">料金</span>
+                  <span class="service_item_meta_term">包括料金</span>
                   <span class="service_item_meta_data">45万円〜</span>
                 </div>
                 <div>
                   <span class="service_item_meta_term">期間</span>
-                  <span class="service_item_meta_data">約1.5〜3ヶ月</span>
+                  <span class="service_item_meta_data">約1〜2ヶ月</span>
                 </div>
               </div>
             </section>
-            <!-- /#s05 -->
 
-            <!-- ネットで販売したい（EC）は現在対応していないため一時的に非表示。
-                 再開する場合はこの section のコメントを外し、id を sEC → s06 に整え、
-                 上の左ナビの EC 項目も有効化してください。
-            <section id="sEC" class="service_item m_reveal js_reveal">
-              <span class="service_item_no">06</span>
-              <h2 class="service_item_name">ネットで販売を始めたい</h2>
-              <p class="service_item_en">E-Commerce</p>
+            <section id="s06" class="service_item m_reveal js_reveal">
+              <div class="top_service_item_line" aria-hidden="true"></div>
+              <div class="service_item_head">
+                <span class="service_item_no">06</span>
+                <h2 class="service_item_name">LINEでお客さんとつながりたい</h2>
+              </div>
+              <p class="service_item_en">LINE Official Account</p>
               <p class="service_item_for">
-                <b>こんな方に</b>これからネット販売を始めたい／今のカートが使いにくい
+                <b>こんな方に</b>一度きりで終わってしまう／リピートやお知らせが届きにくい
               </p>
               <p class="service_item_lead">
-                ネットで商品を販売できるお店をつくります。注文・支払い・配送までを、無理なく運用できる形で整えます。
+                サイトで知ってもらったあと、LINEで関係が続く状態をつくります。開設からメニュー・配信まで整え、集客とリピートにつながる仕組みにします。
               </p>
               <ul class="service_item_inc">
-                <li>ネットショップ構築</li>
-                <li>支払い・配送の設定</li>
-                <li>スマホ対応</li>
-                <li>運用レクチャー</li>
+                <li>アカウント開設・初期設定</li>
+                <li>リッチメニュー設計</li>
+                <li>自動応答・配信の設計</li>
+                <li>運用の進め方のご案内</li>
               </ul>
               <div class="service_item_meta">
                 <div>
-                  <span class="service_item_meta_term">料金</span>
-                  <span class="service_item_meta_data">60万円〜</span>
+                  <span class="service_item_meta_term">包括料金</span>
+                  <span class="service_item_meta_data">10万円〜</span>
                 </div>
                 <div>
                   <span class="service_item_meta_term">期間</span>
-                  <span class="service_item_meta_data">約2〜3.5ヶ月</span>
+                  <span class="service_item_meta_data">約3週間〜1ヶ月</span>
                 </div>
               </div>
             </section>
-            -->
           </div>
-          <!-- /.service_list -->
-        </div>
-        <!-- /.service_body -->
-      </div>
-      <!-- /.service_wrap -->
-    </main>
-    <!-- /.l_main -->
 
-    <!-- floating contact button (bottom-right, like yoshinani-design) -->
-    <a href="index.html#contact" class="m_contact-float js_contact-float" aria-label="お問い合わせ">
-      <svg class="m_contact-float_ring" viewBox="0 0 100 100" aria-hidden="true">
-        <defs>
-          <path
-            id="contactCirclePath"
-            d="M 50,50 m -38,0 a 38,38 0 1,1 76,0 a 38,38 0 1,1 -76,0"
-          />
-        </defs>
-        <text>
-          <textPath
-            href="#contactCirclePath"
-            xlink:href="#contactCirclePath"
-            startOffset="0"
-            textLength="238.76"
-            lengthAdjust="spacing"
-          >CONTACT ・ CONTACT ・ CONTACT ・ CONTACT ・</textPath>
-        </text>
-      </svg>
-      <span class="m_contact-float_icon" aria-hidden="true">
-        <svg viewBox="0 0 512 512">
-          <path
-            d="M476 3.2L12.5 270.6c-18 10.4-15.4 35.6 3.3 42.6L121 352l287-241c5.5-4.6 13.5 3 8.6 8.6L182 384v65.5c0 20.4 25.2 30.1 39.5 15.6l52-52 88 65.5c17 12.6 41.2 3.3 45.5-17.5L512 32.7C516.9 8.5 494 -6.4 476 3.2z"
-          />
-        </svg>
-      </span>
-    </a>
-    <!-- /.m_contact-float -->
+          <div class="service_cta m_reveal js_reveal">
+            <a href="contact.html" class="m_btn m_btn__fill">
+              <span>Contact</span>
+              <span class="m_btn_icon" aria-hidden="true">
+                <img src="img/ellipse.svg" alt="" width="39" height="39" />
+                <img class="m_btn_icon_arrow" src="img/arrow.svg" alt="" width="18" height="11" />
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
 
     <footer class="l_footer">
       <div class="l_footer_contents l_container">
         <div class="l_footer-brand">
-          <p class="l_footer-logo"><img src="img/logo.png" alt="ENIRO" class="l_footer-logo_img"></p>
+          <p class="l_footer-logo"><img src="img/header_logo.svg" alt="ENIRO" class="l_footer-logo_img" width="1386" height="246"></p>
+          <p class="l_footer-tagline">Every color begins with a connection.</p>
         </div>
         <nav class="l_footer-nav" aria-label="フッターメニュー">
           <ul class="l_footer-nav_list">
@@ -381,7 +361,7 @@
             </li>
             <li class="l_footer-nav_item">
               <span class="l_footer-nav_jp">お問い合わせ</span>
-              <a href="index.html#contact" class="l_footer-nav_link">Contact</a>
+              <a href="contact.html" class="l_footer-nav_link">Contact</a>
             </li>
           </ul>
         </nav>

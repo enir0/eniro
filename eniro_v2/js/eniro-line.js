@@ -18,16 +18,16 @@
     },
     {
       el: '.eniro-line--02',
-      w: 1440,
-      h: 2925,
-      x: 0,
-      reverse: false,
+      w: 2053,
+      h: 3198,
+      x: 1440 - 2053 + 280,
+      reverse: true,
     },
     {
       el: '.eniro-line--04',
-      w: 1894,
-      h: 2145,
-      x: 1440 - 1894,
+      w: 2407,
+      h: 2441,
+      x: 1440 - 2407 + 180,
       reverse: false,
     },
   ];
@@ -38,16 +38,17 @@
   function place() {
     const mocks = document.querySelector('.top_kv_mocks');
     const members = document.querySelector('#members');
-    if (!mocks || !members) return;
+    const faq = document.querySelector('#faq');
+    if (!mocks || !members || !faq) return;
 
     const scale = window.innerWidth / FIGMA_W;
     const artboard = FIGMA_W * scale;
     const offsetX = (window.innerWidth - artboard) / 2;
     const heights = LINES.map((line) => line.h * scale);
 
-    const t03 = pageY(mocks) + mocks.offsetHeight * 0.01;
-    const t02 = pageY(members) + 40 * scale;
-    const t04 = t02 + heights[1] - 80 * scale;
+    const t03 = pageY(mocks) - 140 * scale;
+    const t02 = pageY(members) - 200 * scale;
+    const t04 = pageY(faq) - 40 * scale;
 
     const tops = [t03, t02, t04];
 
@@ -113,8 +114,8 @@
             immediateRender: true,
             scrollTrigger: {
               trigger: wrap,
-              start: 'top 72%',
-              end: 'bottom 72%',
+              start: 'top 40%',
+              end: 'bottom 50%',
               scrub: 1,
               invalidateOnRefresh: true,
             },
