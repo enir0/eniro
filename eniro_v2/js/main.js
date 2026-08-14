@@ -9,9 +9,9 @@ if (openingBar) {
     openingBar.style.width = '100%';
   });
 }
-window.addEventListener('load', () => {
-  setTimeout(() => opening?.classList.add('is-hidden'), 650);
-});
+const hideOpening = () => opening?.classList.add('is-hidden');
+window.addEventListener('load', () => setTimeout(hideOpening, 650));
+setTimeout(hideOpening, 2500);
 
 /*---------- ヘッダー（スクロール状態） ----------*/
 const header = document.querySelector('.js_header');

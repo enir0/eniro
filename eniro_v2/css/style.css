@@ -27,7 +27,6 @@
 
 html {
   scroll-behavior: smooth;
-  overflow-x: clip;
 }
 
 body {
@@ -404,8 +403,7 @@ button {
   position: relative;
   min-height: 100svh;
   padding: calc(var(--header-h) + 48px) 0 0;
-  overflow-x: clip;
-  overflow-y: visible;
+  overflow: visible;
 }
 
 .top_kv-inner {
@@ -653,8 +651,8 @@ button {
   }
 
   .top_works_slider {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    overflow: hidden;
+    touch-action: pan-y;
     scrollbar-width: none;
   }
 
