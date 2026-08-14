@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>ENIRO | あなたの色を、新しい縁へ。</title>
+    <meta
+      name="description"
+      content="ENIROは、「縁（EN）」と「色（IRO）」から生まれたWeb制作ブランド。一つひとつの縁を大切に、あなたらしい色をWebという形で届けます。"
+    />
+    <meta name="format-detection" content="telephone=no" />
+    <meta property="og:site_name" content="ENIRO" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="ENIRO | あなたの色を、新しい縁へ。" />
+    <meta
+      property="og:description"
+      content="一つひとつの縁から、あなたらしさを形にする。ENIROは、あなたの想いや魅力を必要な人へ届けるWebサイトをつくります。"
+    />
+    <meta property="og:locale" content="ja_JP" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/DrawSVGPlugin.min.js"></script>
+    <script src="js/main.js" defer></script>
+    <script src="js/eniro-line.js" defer></script>
+  </head>
+  <body class="js_body">
+    <div class="m_opening js_opening">
+      <div class="m_opening_logo"><img src="img/logo.svg" alt="ENIRO" class="m_opening_logo_img"></div>
+      <div class="m_opening_bar"><i class="m_opening_bar-inner"></i></div>
+    </div>
+
+    <header class="l_header js_header">
+      <a href="#top" class="l_header-logo"><img src="img/header_logo.svg" alt="ENIRO" class="l_header-logo_img" width="1386" height="246"></a>
+      <nav class="l_header-nav js_nav" aria-label="メインメニュー">
+        <ul class="l_header-nav_list">
+          <li class="l_header-nav_item">
+            <a href="#about" class="l_header-nav_link">ABOUT</a>
+          </li>
+          <li class="l_header-nav_item">
+            <a href="#service" class="l_header-nav_link">SERVICE</a>
+          </li>
+          <li class="l_header-nav_item">
+            <a href="#works" class="l_header-nav_link">WORKS</a>
+          </li>
+          <li class="l_header-nav_item">
+            <a href="#faq" class="l_header-nav_link">FAQ</a>
+          </li>
+          <li class="l_header-nav_item">
+            <a href="#contact" class="l_header-nav_link l_header-nav_link__cta">
+              CONTACT
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <button class="m_hamburger js_hamburger" aria-label="メニュー" type="button">
+        <span class="m_hamburger-bar"></span>
+        <span class="m_hamburger-bar"></span>
+      </button>
+    </header>
+
+    <div class="eniro-lines" aria-hidden="true">
+      <div class="eniro-line eniro-line--03">
+        <svg viewBox="0 0 1440 2965" fill="none" xmlns="http://www.w3.org/2000/svg" overflow="visible" preserveAspectRatio="xMinYMin meet">
+          <path class="eniro-line__path" d="M-85.0003 2963.2C-85.0003 2963.2 1134.51 2423.64 1436.23 2178.37C1737.94 1933.1 1919.35 1718.64 1684.85 1460.04C1450.35 1201.44 245.957 1482.67 818.118 926.384C1390.28 370.093 -289.099 0.973185 -289.099 0.973185" stroke="#d4a3a3" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"  />
+        </svg>
+      </div>
+      <div class="eniro-line eniro-line--02">
+        <svg viewBox="0 0 1440 2925" fill="none" xmlns="http://www.w3.org/2000/svg" overflow="visible" preserveAspectRatio="xMinYMin meet">
+          <path class="eniro-line__path" d="M1503.5 0.941116C1503.5 0.941116 522 340.442 215.498 504.94C-91.0047 669.439 -279.889 831.205 -72.5021 1124.94C134.885 1418.68 1310.5 1416.94 722.999 1814.44C135.5 2211.94 1722.5 2923.94 1722.5 2923.94" stroke="#d4a3a3" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"  />
+        </svg>
+      </div>
+      <div class="eniro-line eniro-line--04">
+        <svg viewBox="0 0 1894 2145" fill="none" xmlns="http://www.w3.org/2000/svg" overflow="visible" preserveAspectRatio="xMinYMin meet">
+          <path class="eniro-line__path" d="M1893.19 16.9867C1744.37 -113.367 827.091 582.452 765.382 1049.3C703.673 1516.15 1147.98 935.942 1333.11 1129.79C1518.23 1323.64 640.488 2021.38 0.1875 2143.98" stroke="#d4a3a3" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"  />
+          <circle class="eniro-line__dot" r="3.5" fill="#d4a3a3" />
+        </svg>
+      </div>
+    </div>
+
+    <div id="top" class="top_kv">
+      <div class="top_kv-inner">
+        <p class="top_kv_sub m_reveal js_reveal">CONNECTION × COLOR</p>
+        <h1 class="top_kv_brand m_reveal m_reveal__d1 js_reveal"><img src="img/logo.svg" alt="ENIRO" class="top_kv_brand_img"></h1>
+        <p class="top_kv_copy m_reveal m_reveal__d2 js_reveal">
+          あなたの色を、新しい縁へ。
+        </p>
+      </div>
+      <div class="top_kv_mocks top_works_slider js_works-slider m_reveal m_reveal__d3 js_reveal">
+        <div class="top_works_track">
+          <!-- set 1 : PC多め（PC PC PC SP …） -->
+          <a href="#works" class="top_works_item mock mock--laptop" style="--a: #b6b6b6; --b: #d3d3d3" aria-label="制作実績（サンプル）">
+            <span class="mock_screen"><span class="mock_bar"></span></span>
+            <span class="mock_base"></span>
+          </a>
+          <a href="#works" class="top_works_item mock mock--laptop" style="--a: #c9c9c9; --b: #bababa" aria-label="制作実績（サンプル）">
+            <span class="mock_screen"><span class="mock_bar"></span></span>
+            <span class="mock_base"></span>
+          </a>
+          <a href="#works" class="top_works_item mock mock--laptop" style="--a: #d6d6d6; --b: #c9c9c9" aria-label="制作実績（サンプル）">
+            <span class="mock_screen"><span class="mock_bar"></span></span>
+            <span class="mock_base"></span>
+          </a>
+          <a href="#works" class="top_works_item mock mock--phone" style="--a: #d3d3d3; --b: #b6b6b6" aria-label="制作実績（サンプル）">
+            <span class="mock_screen"><span class="mock_notch"></span></span>
+          </a>
+          <span class="top_works_item mock mock--word"><span>ENIRO<em>connection</em></span></span>
+          <a href="#works" class="top_works_item mock mock--laptop" style="--a: #bababa; --b: #d6d6d6" aria-label="制作実績（サンプル）">
+            <span class="mock_screen"><span class="mock_bar"></span></span>
+            <span class="mock_base"></span>
+          </a>
+          <a href="#works" class="top_works_item mock mock--laptop" style="--a: #d4d4d4; --b: #c9c9c9" aria-label="制作実績（サンプル）">
+            <span class="mock_screen"><span class="mock_bar"></span></span>
+            <span class="mock_base"></span>
+          </a>
+          <a href="#works" class="top_works_item mock mock--laptop" style="--a: #b6b6b6; --b: #bababa" aria-label="制作実績（サンプル）">
+            <span class="mock_screen"><span class="mock_bar"></span></span>
+            <span class="mock_base"></span>
+          </a>
+          <a href="#works" class="top_works_item mock mock--phone" style="--a: #c9c9c9; --b: #d4d4d4" aria-label="制作実績（サンプル）">
+            <span class="mock_screen"><span class="mock_notch"></span></span>
+          </a>
+          <!-- set 2 (duplicate for seamless loop) -->
+          <a href="#works" class="top_works_item mock mock--laptop" style="--a: #b6b6b6; --b: #d3d3d3" aria-hidden="true" tabindex="-1">
+            <span class="mock_screen"><span class="mock_bar"></span></span>
+            <span class="mock_base"></span>
+          </a>
+          <a href="#works" class="top_works_item mock mock--laptop" style="--a: #c9c9c9; --b: #bababa" aria-hidden="true" tabindex="-1">
+            <span class="mock_screen"><span class="mock_bar"></span></span>
+            <span class="mock_base"></span>
+          </a>
+          <a href="#works" class="top_works_item mock mock--laptop" style="--a: #d6d6d6; --b: #c9c9c9" aria-hidden="true" tabindex="-1">
+            <span class="mock_screen"><span class="mock_bar"></span></span>
+            <span class="mock_base"></span>
+          </a>
+          <a href="#works" class="top_works_item mock mock--phone" style="--a: #d3d3d3; --b: #b6b6b6" aria-hidden="true" tabindex="-1">
+            <span class="mock_screen"><span class="mock_notch"></span></span>
+          </a>
+          <span class="top_works_item mock mock--word" aria-hidden="true"><span>ENIRO<em>connection</em></span></span>
+          <a href="#works" class="top_works_item mock mock--laptop" style="--a: #bababa; --b: #d6d6d6" aria-hidden="true" tabindex="-1">
+            <span class="mock_screen"><span class="mock_bar"></span></span>
+            <span class="mock_base"></span>
+          </a>
+          <a href="#works" class="top_works_item mock mock--laptop" style="--a: #d4d4d4; --b: #c9c9c9" aria-hidden="true" tabindex="-1">
+            <span class="mock_screen"><span class="mock_bar"></span></span>
+            <span class="mock_base"></span>
+          </a>
+          <a href="#works" class="top_works_item mock mock--laptop" style="--a: #b6b6b6; --b: #bababa" aria-hidden="true" tabindex="-1">
+            <span class="mock_screen"><span class="mock_bar"></span></span>
+            <span class="mock_base"></span>
+          </a>
+          <a href="#works" class="top_works_item mock mock--phone" style="--a: #c9c9c9; --b: #d4d4d4" aria-hidden="true" tabindex="-1">
+            <span class="mock_screen"><span class="mock_notch"></span></span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <main class="l_main">
+      <section id="about" class="top_about">
+        <div class="l_contents">
+          <div class="l_container top_about_grid">
+            <div class="top_about_head">
+              <p class="m_section-jp m_reveal js_reveal">ENIROについて</p>
+              <h2 class="m_section-title m_reveal m_reveal__d1 js_reveal">About</h2>
+            </div>
+            <div class="top_about_body">
+              <h3 class="top_about_lead m_reveal js_reveal">
+                それぞれの魅力を引き出し、<br />
+                Webという形で届ける。
+              </h3>
+              <div class="top_about_txt m_reveal m_reveal__d1 js_reveal">
+                <p>
+                  ENIROは、「縁（EN）」と「色（IRO）」から生まれたWeb制作ブランドです。
+                </p>
+                <p>
+                  人や企業、サービスには、それぞれにしかない想いや個性があります。<br />
+                  その背景にある魅力を丁寧に汲み取り、その人らしい「色」をWebサイトとして表現します。
+                </p>
+                <p>
+                  Webサイトを通して新しい出会いが生まれ、その出会いがまた次の「縁」へとつながっていく。<br />
+                  一つひとつの想いに向き合い、魅力が伝わるWebサイトを。<br />
+                  ENIROは、「縁」と「色」のつながりを大切にしています。
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="service" class="top_service">
+        <div class="l_contents">
+          <div class="l_container top_service_layout">
+            <h2 class="top_service_title m_reveal js_reveal" aria-label="Service">
+              <span>Service</span>
+            </h2>
+            <div class="top_service_main">
+              <p class="top_service_lead m_reveal js_reveal">
+                ヒアリングから制作・実装まで一貫対応。<br />
+                見た目だけではなく、想いが伝わるWebサイトを形にします。
+              </p>
+              <ul class="top_service_list">
+                <li class="top_service_item m_reveal m_reveal__d1 js_reveal">
+                  <div class="top_service_item_line" aria-hidden="true"></div>
+                  <div class="top_service_item_head">
+                    <span class="top_service_item_no">01</span>
+                    <h3 class="top_service_item_name">Webサイト制作</h3>
+                  </div>
+                  <p class="top_service_item_desc">
+                    会社やお店の“顔”となるホームページを、目的に合わせて一から制作。見た目の美しさと、使いやすさ・成果の両方を大切につくります。
+                  </p>
+                </li>
+                <li class="top_service_item m_reveal m_reveal__d2 js_reveal">
+                  <div class="top_service_item_line" aria-hidden="true"></div>
+                  <div class="top_service_item_head">
+                    <span class="top_service_item_no">02</span>
+                    <h3 class="top_service_item_name">Webデザイン・ブランディング</h3>
+                  </div>
+                  <p class="top_service_item_desc">
+                    ブランドの魅力が伝わるデザインを設計。配色・写真・文字組みまでこだわり、“あなたらしさ”を目に見える形にします。
+                  </p>
+                </li>
+                <li class="top_service_item m_reveal m_reveal__d1 js_reveal">
+                  <div class="top_service_item_line" aria-hidden="true"></div>
+                  <div class="top_service_item_head">
+                    <span class="top_service_item_no">03</span>
+                    <h3 class="top_service_item_name">コーディング・実装</h3>
+                  </div>
+                  <p class="top_service_item_desc">
+                    デザインを忠実に、動きのある表現で再現。スマホ対応・表示速度・SEOにも配慮した、しっかり動くサイトに仕上げます。
+                  </p>
+                </li>
+                <li class="top_service_item m_reveal m_reveal__d2 js_reveal">
+                  <div class="top_service_item_line" aria-hidden="true"></div>
+                  <div class="top_service_item_head">
+                    <span class="top_service_item_no">04</span>
+                    <h3 class="top_service_item_name">LINE構築</h3>
+                  </div>
+                  <p class="top_service_item_desc">
+                    LINE公式アカウントの開設から、リッチメニュー・自動応答・配信の設計まで対応。集客とリピートにつながる仕組みをつくります。
+                  </p>
+                </li>
+                <li class="top_service_item m_reveal m_reveal__d1 js_reveal">
+                  <div class="top_service_item_line" aria-hidden="true"></div>
+                  <div class="top_service_item_head">
+                    <span class="top_service_item_no">05</span>
+                    <h3 class="top_service_item_name">CMS・運用サポート</h3>
+                  </div>
+                  <p class="top_service_item_desc">
+                    WordPressなどで“自分で更新できる”仕組みを構築。公開後の修正・保守・改善まで、長く伴走します。
+                  </p>
+                </li>
+                <li class="top_service_item m_reveal m_reveal__d2 js_reveal">
+                  <div class="top_service_item_line" aria-hidden="true"></div>
+                  <div class="top_service_item_head">
+                    <span class="top_service_item_no">06</span>
+                    <h3 class="top_service_item_name">
+                      グラフィック制作
+                      <span class="top_service_item_tag">パートナー対応</span>
+                    </h3>
+                  </div>
+                  <p class="top_service_item_desc">
+                    チラシ・名刺・バナー・各種グラフィック制作まで幅広く対応。<br />
+                    ブランドの世界観を大切に、一貫したデザインをご提案します。
+                  </p>
+                </li>
+              </ul>
+              <div class="top_service_cta m_reveal js_reveal">
+                <a href="service.html" class="m_btn m_btn__fill">
+                  <span>Read More</span>
+                  <span class="m_btn_icon" aria-hidden="true">
+                    <img src="img/ellipse.svg" alt="" width="39" height="39" />
+                    <img class="m_btn_icon_arrow" src="img/arrow.svg" alt="" width="18" height="11" />
+                  </span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="works" class="top_works">
+        <div class="l_contents">
+          <div class="l_container">
+            <div class="top_works_head">
+              <p class="m_section-jp m_reveal js_reveal">制作実績</p>
+              <h2 class="m_section-title m_reveal m_reveal__d1 js_reveal">Works</h2>
+              <p class="top_works_lead m_reveal m_reveal__d1 js_reveal">
+                掲載許可をいただいた実績を一部掲載しております。
+              </p>
+            </div>
+            <ul class="top_works_grid">
+              <li class="top_works_item m_reveal m_reveal__d1 js_reveal">
+                <a href="#" class="top_works_card">
+                  <div class="top_works_thumb"></div>
+                  <div class="top_works_body">
+                    <span class="top_works_cat">LP</span>
+                    <h3 class="top_works_name">Pilates</h3>
+                  </div>
+                </a>
+              </li>
+              <li class="top_works_item m_reveal m_reveal__d2 js_reveal">
+                <a href="#" class="top_works_card">
+                  <div class="top_works_thumb"></div>
+                  <div class="top_works_body">
+                    <span class="top_works_cat">LP</span>
+                    <h3 class="top_works_name">Recruit</h3>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="members" class="top_members">
+        <div class="l_contents">
+          <div class="l_container">
+            <div class="top_members_head">
+              <p class="m_section-jp m_reveal js_reveal">二人のチーム</p>
+              <h2 class="m_section-title m_reveal m_reveal__d1 js_reveal">Member</h2>
+            </div>
+            <div class="top_members_list">
+              <article class="top_members_item m_reveal m_reveal__d1 js_reveal">
+                <div class="top_members_photo">
+                  <img src="img/member-designer.png" alt="Designer" width="500" height="300" />
+                </div>
+                <div class="top_members_meta">
+                  <h3 class="top_members_name">Designer</h3>
+                  <span class="top_members_role">デザイン担当</span>
+                </div>
+                <p class="top_members_desc">
+                  お店や会社の魅力が伝わる「見た目づくり」を担当。色・写真・文字の一つひとつまでこだわり、「素敵だな」「信頼できそう」と感じてもらえるデザインに仕上げます。
+                </p>
+                <ul class="top_members_skills">
+                  <li>Art Direction</li>
+                  <li>UI/UX Design</li>
+                  <li>Branding</li>
+                </ul>
+              </article>
+              <article class="top_members_item m_reveal m_reveal__d2 js_reveal">
+                <div class="top_members_photo">
+                  <img src="img/member-coder.png" alt="Coder" width="500" height="300" />
+                </div>
+                <div class="top_members_meta">
+                  <h3 class="top_members_name">Coder</h3>
+                  <span class="top_members_role">実装担当</span>
+                </div>
+                <p class="top_members_desc">
+                  デザインを、崩さずそのままの美しさでホームページにする「実装」を担当。スマホでも見やすく、表示が速く、動きのある気持ちのいいサイトに仕上げます。
+                </p>
+                <ul class="top_members_skills">
+                  <li>Frontend</li>
+                  <li>Animation</li>
+                  <li>WordPress</li>
+                </ul>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="reason" class="top_reason">
+        <div class="l_contents">
+          <div class="l_container">
+            <p class="m_section-jp m_section-jp__center m_reveal js_reveal">
+              私たちが選ばれる理由
+            </p>
+            <h2 class="m_section-title m_section-title__center m_reveal m_reveal__d1 js_reveal">
+              Reason
+            </h2>
+            <ol class="top_reason_list">
+              <li class="top_reason_item m_reveal m_reveal__d1 js_reveal">
+                <span class="top_reason_no">01</span>
+                <div class="top_reason_en-wrap">
+                  <span class="top_reason_rule" aria-hidden="true"></span>
+                  <span class="top_reason_en">UNDERSTANDING</span>
+                  <span class="top_reason_rule" aria-hidden="true"></span>
+                </div>
+                <h3 class="top_reason_heading">想いを汲み取る</h3>
+                <p class="top_reason_desc">
+                  企業やサービスが持つ想いや背景を丁寧に理解し、その魅力や個性を引き出します。<br />
+                  表面的なデザインではなく、本質的な価値が伝わる形を考えます。
+                </p>
+              </li>
+              <li class="top_reason_item m_reveal m_reveal__d2 js_reveal">
+                <span class="top_reason_no">02</span>
+                <div class="top_reason_en-wrap">
+                  <span class="top_reason_rule" aria-hidden="true"></span>
+                  <span class="top_reason_en">TOTAL DESIGN</span>
+                  <span class="top_reason_rule" aria-hidden="true"></span>
+                </div>
+                <h3 class="top_reason_heading">一貫したデザイン</h3>
+                <p class="top_reason_desc">
+                  Webサイトからグラフィックまで、ブランドの世界観を一貫してデザイン。<br />
+                  細部までこだわり、あなたらしさが伝わるブランドを形にします。
+                </p>
+              </li>
+              <li class="top_reason_item m_reveal m_reveal__d3 js_reveal">
+                <span class="top_reason_no">03</span>
+                <div class="top_reason_en-wrap">
+                  <span class="top_reason_rule" aria-hidden="true"></span>
+                  <span class="top_reason_en">LONG-TERM SUPPORT</span>
+                  <span class="top_reason_rule" aria-hidden="true"></span>
+                </div>
+                <h3 class="top_reason_heading">その先まで寄り添う</h3>
+                <p class="top_reason_desc">
+                  Webサイトは作って終わりではなく、育てていくもの。<br />
+                  公開後の更新や改善まで、長く安心してお付き合いいただける環境をつくります。
+                </p>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section id="flow" class="top_flow">
+        <div class="l_contents">
+          <div class="l_container">
+            <div class="top_flow_head">
+              <p class="m_section-jp m_reveal js_reveal">制作の流れ</p>
+              <h2 class="m_section-title m_reveal m_reveal__d1 js_reveal">Flow</h2>
+              <p class="top_flow_lead m_reveal m_reveal__d1 js_reveal">
+                ご相談から公開まで、あなたに合った形を一緒に考えながら進めていきます。
+              </p>
+            </div>
+            <ol class="top_flow_list">
+              <li class="top_flow_item m_reveal m_reveal__d1 js_reveal">
+                <h3 class="top_flow_item_heading">お問い合わせ・ヒアリング</h3>
+                <p class="top_flow_item_desc">
+                  まずは現在の状況やご希望をお聞かせください。<br />
+                  Webサイトの目的や課題、ターゲット、ご予算、納期などを丁寧にお伺いし、どのようなサイトが必要なのかを一緒に整理していきます。
+                </p>
+              </li>
+              <li class="top_flow_item m_reveal m_reveal__d2 js_reveal">
+                <h3 class="top_flow_item_heading">ご提案・お見積もり</h3>
+                <p class="top_flow_item_desc">
+                  ヒアリング内容をもとに、サイトの構成やデザインの方向性、必要な機能などをご提案します。<br />
+                  制作内容と費用、スケジュールをご確認いただき、ご納得いただいたうえで正式にご契約となります。
+                </p>
+              </li>
+              <li class="top_flow_item m_reveal m_reveal__d3 js_reveal">
+                <h3 class="top_flow_item_heading">デザイン・実装</h3>
+                <p class="top_flow_item_desc">
+                  決定した方向性をもとに、デザイン制作からコーディング・実装まで進めていきます。<br />
+                  制作途中も進捗を共有しながら、ご確認・修正を重ね、イメージを形にしていきます。
+                </p>
+              </li>
+              <li class="top_flow_item m_reveal m_reveal__d4 js_reveal">
+                <h3 class="top_flow_item_heading">公開・運用</h3>
+                <p class="top_flow_item_desc">
+                  テスト確認のうえ公開します。公開後の更新・保守や追加施策まで、長く安心して運用できるよう伴走します。
+                </p>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- faq：既存コンテンツを維持 -->
+      <section id="faq" class="top_faq">
+        <div class="l_contents">
+          <div class="l_container">
+            <p class="m_section-jp m_section-jp__center m_reveal js_reveal">よくある質問</p>
+            <h2 class="m_section-title m_section-title__center m_reveal m_reveal__d1 js_reveal">
+              FAQ
+            </h2>
+            <div class="top_faq_list m_reveal m_reveal__d1 js_reveal">
+              <div class="top_faq_item js_faq">
+                <button class="top_faq_q" type="button">
+                  どんなジャンルのサイトでも制作できますか？
+                  <i class="top_faq_icon"></i>
+                </button>
+                <div class="top_faq_a">
+                  <p>
+                    コーポレート・採用・ブランド・LP・ECなど、幅広いジャンルに対応しています。まずはご相談ください。ジャンルによっては得意な事例をご紹介します。
+                  </p>
+                </div>
+              </div>
+              <div class="top_faq_item js_faq">
+                <button class="top_faq_q" type="button">
+                  写真素材は用意する必要がありますか？
+                  <i class="top_faq_icon"></i>
+                </button>
+                <div class="top_faq_a">
+                  <p>
+                    お持ちの素材があればご活用いただけますが、ない場合はストックフォトのご提案や、撮影ディレクションのご相談も可能です。
+                  </p>
+                </div>
+              </div>
+              <div class="top_faq_item js_faq">
+                <button class="top_faq_q" type="button">
+                  原稿はすべて用意する必要がありますか？
+                  <i class="top_faq_icon"></i>
+                </button>
+                <div class="top_faq_a">
+                  <p>
+                    いいえ。ラフなメモや箇条書きからでも大丈夫です。ヒアリングをもとに、構成やコピーの作成もお手伝いできます。
+                  </p>
+                </div>
+              </div>
+              <div class="top_faq_item js_faq">
+                <button class="top_faq_q" type="button">
+                  既存サイトの修正や更新もお願いできますか？
+                  <i class="top_faq_icon"></i>
+                </button>
+                <div class="top_faq_a">
+                  <p>
+                    はい。部分的な修正・リニューアル・運用代行にも対応しています。現状のサイトを拝見したうえでご提案します。
+                  </p>
+                </div>
+              </div>
+              <div class="top_faq_item js_faq">
+                <button class="top_faq_q" type="button">
+                  急ぎの相談にも対応してもらえますか？
+                  <i class="top_faq_icon"></i>
+                </button>
+                <div class="top_faq_a">
+                  <p>
+                    スケジュールの状況によりますが、可能な限り柔軟に対応します。納期がお決まりの場合は、まずお早めにご連絡ください。
+                  </p>
+                </div>
+              </div>
+              <div class="top_faq_item js_faq">
+                <button class="top_faq_q" type="button">
+                  遠方からでも依頼できますか？
+                  <i class="top_faq_icon"></i>
+                </button>
+                <div class="top_faq_a">
+                  <p>
+                    もちろんです。オンラインでの打ち合わせが中心のため、全国どこからでもご依頼いただけます。
+                  </p>
+                </div>
+              </div>
+              <div class="top_faq_item js_faq">
+                <button class="top_faq_q" type="button">
+                  ドメインやサーバーのことが分からなくても大丈夫ですか？
+                  <i class="top_faq_icon"></i>
+                </button>
+                <div class="top_faq_a">
+                  <p>
+                    ご安心ください。取得・設定・公開まわりまで、専門用語をかみ砕いてご案内・代行します。
+                  </p>
+                </div>
+              </div>
+              <div class="top_faq_item js_faq">
+                <button class="top_faq_q" type="button">
+                  WordPressにも対応していますか？
+                  <i class="top_faq_icon"></i>
+                </button>
+                <div class="top_faq_a">
+                  <p>
+                    はい。WordPressでの構築や、お客様ご自身で更新できるCMS化にも対応しています。
+                  </p>
+                </div>
+              </div>
+              <div class="top_faq_item js_faq">
+                <button class="top_faq_q" type="button">
+                  制作後の保守・運用もお願いできますか？
+                  <i class="top_faq_icon"></i>
+                </button>
+                <div class="top_faq_a">
+                  <p>
+                    はい。更新代行・軽微な修正・保守プランなど、公開後も継続的にサポートいたします。
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <section id="contact" class="top_contact">
+      <div class="l_contents">
+        <div class="l_container top_contact_grid">
+          <div class="top_contact_head">
+            <p class="m_section-jp m_reveal js_reveal">お問い合わせ</p>
+            <h2 class="m_section-title m_reveal m_reveal__d1 js_reveal">Contact</h2>
+          </div>
+          <div class="top_contact_body">
+            <p class="top_contact_copy m_reveal js_reveal">
+              Webサイトの改善点や課題を、無料で診断します。<br />
+              新規制作・リニューアルをお考えの方も、<br />
+              まずはお気軽にご相談ください。
+            </p>
+          </div>
+          <div class="m_subsidy top_contact_subsidy m_reveal m_reveal__d1 js_reveal">
+            <p class="m_subsidy_label"><span class="m_subsidy_mark" aria-hidden="true"></span>補助金について</p>
+            <p class="m_subsidy_txt">
+              ホームページ制作をご検討の方へ。小規模事業者持続化補助金などをご利用いただける場合があります。事業内容や公募時期によって対象となるか異なりますので、お気軽にご相談ください。
+            </p>
+          </div>
+          <div class="top_contact_cta m_reveal m_reveal__d2 js_reveal">
+            <a href="mailto:hello@eniro.example" class="m_btn m_btn__fill">
+              <span>Contact Form</span>
+              <span class="m_btn_icon" aria-hidden="true">
+                <img src="img/ellipse.svg" alt="" width="39" height="39" />
+                <img class="m_btn_icon_arrow" src="img/arrow.svg" alt="" width="18" height="11" />
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="l_footer">
+      <div class="l_footer_contents l_container">
+        <div class="l_footer-brand">
+          <p class="l_footer-logo"><img src="img/header_logo.svg" alt="ENIRO" class="l_footer-logo_img" width="1386" height="246"></p>
+          <p class="l_footer-tagline">Every color begins with a connection.</p>
+        </div>
+        <nav class="l_footer-nav" aria-label="フッターメニュー">
+          <ul class="l_footer-nav_list">
+            <li class="l_footer-nav_item">
+              <span class="l_footer-nav_jp">ENIROについて</span>
+              <a href="#about" class="l_footer-nav_link">About</a>
+            </li>
+            <li class="l_footer-nav_item">
+              <span class="l_footer-nav_jp">サービス</span>
+              <a href="#service" class="l_footer-nav_link">Service</a>
+            </li>
+            <li class="l_footer-nav_item">
+              <span class="l_footer-nav_jp">制作実績</span>
+              <a href="#works" class="l_footer-nav_link">Works</a>
+            </li>
+            <li class="l_footer-nav_item">
+              <span class="l_footer-nav_jp">よくある質問</span>
+              <a href="#faq" class="l_footer-nav_link">FAQ</a>
+            </li>
+            <li class="l_footer-nav_item">
+              <span class="l_footer-nav_jp">お問い合わせ</span>
+              <a href="#contact" class="l_footer-nav_link">Contact</a>
+            </li>
+          </ul>
+        </nav>
+        <a href="#" class="l_footer-policy">Privacy policy</a>
+      </div>
+      <div class="l_footer_bottom">
+        <p class="l_footer-copyright">
+          <small>Copyright © 2026 ENIRO, Ltd. All Rights Reserved.</small>
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
