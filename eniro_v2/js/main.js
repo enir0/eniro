@@ -1,5 +1,42 @@
 'use strict';
 
+/*---------- 日本語の改行（助詞の行頭割れ防止） ----------*/
+(() => {
+  const JOIN = '\u2060'; // WORD JOINER：直前の文字と助詞を同じ行に保つ
+  const re =
+    /([ぁ-んァ-ン一-龥々ーA-Za-z0-9０-９）」』】》〉"」])(を|に|は|が|へ|で|と|も|や|か|の)/g;
+
+  const skip = new Set(['SCRIPT', 'STYLE', 'TEXTAREA', 'CODE', 'PRE', 'KBD', 'INPUT']);
+
+  const fixText = (text) =>
+    text.replace(re, (_, a, b) => `${a}${JOIN}${b}`);
+
+  const walk = (root) => {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        const el = node.parentElement;
+        if (!el || skip.has(el.tagName)) return NodeFilter.FILTER_REJECT;
+        if (el.closest('script, style, textarea, code, pre')) return NodeFilter.FILTER_REJECT;
+        const v = node.nodeValue;
+        if (!v || !/[ぁ-んァ-ン一-龥]/.test(v)) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      },
+    });
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach((node) => {
+      const next = fixText(node.nodeValue);
+      if (next !== node.nodeValue) node.nodeValue = next;
+    });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => walk(document.body), { once: true });
+  } else {
+    walk(document.body);
+  }
+})();
+
 /*---------- オープニング / ローダー（初回のみ） ----------*/
 const opening = document.querySelector('.js_opening');
 const hideOpening = () => {

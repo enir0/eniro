@@ -78,52 +78,139 @@
     <main class="l_main">
       <div class="contact_wrap">
         <header class="contact_head m_reveal js_reveal">
-          <p class="m_section-jp">お問い合わせ</p>
-          <h1 class="m_section-title">Contact</h1>
-          <p class="contact_head_lead">
-            まずは、お気軽にご相談ください。
-          </p>
+          <p class="m_section-jp m_section-jp__center">お問い合わせ</p>
+          <h1 class="m_section-title m_section-title__center">Contact</h1>
           <p class="contact_head_desc">
-            Webサイトの改善点や課題を、無料で診断します。新規制作・リニューアルをお考えの方も、
-            いまの状況を伺いながら、次の一歩をご提案します。
+            お問い合わせ内容をご記入のうえ、「送信する」ボタンを押してください。<br />
+            送信が完了すると、確認メッセージが表示されます。
           </p>
         </header>
 
         <form
           class="contact_form m_reveal m_reveal__d1 js_reveal"
-          action="mailto:hello@eniro.example"
-          method="post"
-          enctype="text/plain"
+          action="contact_thanks.html"
+          method="get"
         >
-          <div class="top_contact_fields">
-            <label class="top_contact_field">
-              <span>お名前</span>
-              <input type="text" name="name" autocomplete="name" required />
-            </label>
-            <label class="top_contact_field">
-              <span>メールアドレス</span>
-              <input type="email" name="email" autocomplete="email" required />
-            </label>
-            <label class="top_contact_field top_contact_field__full">
-              <span>会社名・屋号（任意）</span>
-              <input type="text" name="company" autocomplete="organization" />
-            </label>
-            <label class="top_contact_field top_contact_field__full">
-              <span>ご相談内容</span>
-              <textarea name="message" rows="6" required></textarea>
-            </label>
+          <div class="contact_fields">
+            <div class="contact_row">
+              <div class="contact_row_meta">
+                <label class="contact_label" for="contact-company">会社名</label>
+                <span class="contact_badge contact_badge__optional">任意</span>
+              </div>
+              <input
+                class="contact_input"
+                id="contact-company"
+                type="text"
+                name="company"
+                autocomplete="organization"
+                placeholder="株式会社 〇〇"
+              />
+            </div>
+
+            <div class="contact_row">
+              <div class="contact_row_meta">
+                <label class="contact_label" for="contact-name">お名前</label>
+                <span class="contact_badge contact_badge__required">必須</span>
+              </div>
+              <input
+                class="contact_input"
+                id="contact-name"
+                type="text"
+                name="name"
+                autocomplete="name"
+                placeholder="例）山田　太郎"
+                required
+              />
+            </div>
+
+            <div class="contact_row">
+              <div class="contact_row_meta">
+                <label class="contact_label" for="contact-kana">フリガナ</label>
+                <span class="contact_badge contact_badge__required">必須</span>
+              </div>
+              <input
+                class="contact_input"
+                id="contact-kana"
+                type="text"
+                name="kana"
+                autocomplete="off"
+                placeholder="例）ヤマダ　タロウ"
+                required
+              />
+            </div>
+
+            <div class="contact_row">
+              <div class="contact_row_meta">
+                <label class="contact_label" for="contact-email">メールアドレス</label>
+                <span class="contact_badge contact_badge__required">必須</span>
+              </div>
+              <input
+                class="contact_input"
+                id="contact-email"
+                type="email"
+                name="email"
+                autocomplete="email"
+                placeholder="例）example@example.com"
+                required
+              />
+            </div>
+
+            <div class="contact_row">
+              <div class="contact_row_meta">
+                <label class="contact_label" for="contact-tel">電話番号</label>
+                <span class="contact_badge contact_badge__required">必須</span>
+              </div>
+              <input
+                class="contact_input"
+                id="contact-tel"
+                type="tel"
+                name="tel"
+                autocomplete="tel"
+                placeholder="例）0123-456-789"
+                required
+              />
+            </div>
+
+            <div class="contact_row">
+              <div class="contact_row_meta">
+                <label class="contact_label" for="contact-address">ご住所</label>
+                <span class="contact_badge contact_badge__optional">任意</span>
+              </div>
+              <input
+                class="contact_input"
+                id="contact-address"
+                type="text"
+                name="address"
+                autocomplete="street-address"
+                placeholder="例）千葉県香取市〇〇1-2"
+              />
+            </div>
+
+            <div class="contact_row contact_row__message">
+              <div class="contact_row_meta">
+                <label class="contact_label" for="contact-message">お問い合わせ内容</label>
+                <span class="contact_badge contact_badge__required">必須</span>
+              </div>
+              <textarea
+                class="contact_input contact_input__message"
+                id="contact-message"
+                name="message"
+                rows="8"
+                placeholder="ご相談・お問い合わせ内容をご入力ください"
+                required
+              ></textarea>
+            </div>
           </div>
-          <p class="contact_form_note">
-            ※送信後、内容を確認のうえご連絡いたします。通常2〜3営業日以内にご返信します。
-          </p>
-          <div class="top_contact_cta">
-            <button class="m_btn m_btn__fill" type="submit">
-              <span>Send</span>
-              <span class="m_btn_icon" aria-hidden="true">
-                <img src="img/ellipse.svg" alt="" width="39" height="39" />
-                <img class="m_btn_icon_arrow" src="img/arrow.svg" alt="" width="18" height="11" />
-              </span>
-            </button>
+
+          <label class="contact_agree">
+            <input type="checkbox" name="privacy" value="1" required />
+            <span>
+              <a href="privacy.html" class="contact_agree_link" target="_blank" rel="noopener noreferrer">プライバシーポリシー</a>に同意する
+            </span>
+          </label>
+
+          <div class="contact_submit">
+            <button class="contact_submit_btn" type="submit">送信する</button>
           </div>
         </form>
       </div>
@@ -159,7 +246,7 @@
             </li>
           </ul>
         </nav>
-        <a href="#" class="l_footer-policy">Privacy policy</a>
+        <a href="privacy.html" class="l_footer-policy">Privacy policy</a>
       </div>
       <div class="l_footer_bottom">
         <p class="l_footer-copyright">
