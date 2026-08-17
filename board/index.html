@@ -242,6 +242,23 @@
   .google-mark{font-family:Arial,sans-serif;font-size:18px;font-weight:700;}
   .config-note{margin-top:14px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:11.5px;color:var(--ink-soft);text-align:left;}
   .comment-login-user{min-height:38px;display:flex;align-items:center;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;background:#f8f6f5;font-size:12.5px;font-weight:600;}
+
+  /* --- Project operation cards --- */
+  .info-section{margin-top:24px;border:1px solid #E4D5D7;border-radius:14px;padding:18px;background:#fff;}
+  .info-section h3{font-family:var(--font-display);font-size:15px;margin:0 0 14px;}
+  .info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 18px;}
+  .info-grid.cols3{grid-template-columns:repeat(3,minmax(0,1fr));}
+  .info-item{min-width:0;padding:10px 0;border-bottom:1px solid #EFE6E7;}
+  .info-label{font-size:10.5px;color:var(--ink-soft);font-weight:600;margin-bottom:3px;}
+  .info-value{font-size:13px;font-weight:600;overflow-wrap:anywhere;}
+  .info-value.muted{color:var(--ink-soft);font-weight:500;}
+  .status-mini{display:inline-block;padding:3px 8px;border-radius:999px;background:#F5EEED;font-size:11px;}
+  .modal-section{margin:22px 0 8px;padding-top:18px;border-top:1px solid var(--line);}
+  .modal-section h4{font-family:var(--font-display);font-size:14px;margin:0 0 12px;}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  input[type=number]{font-family:var(--font-body);font-size:13px;color:var(--ink);border:1.5px solid var(--line);border-radius:8px;padding:8px 10px;background:#fff;width:100%;}
+  @media(max-width:700px){.info-grid,.info-grid.cols3,.field-row{grid-template-columns:1fr;}}
+
 </style>
 </head>
 <body class="locked">
@@ -279,13 +296,12 @@ import { getFirestore, doc, getDoc, setDoc, onSnapshot } from 'https://www.gstat
 // に表示される firebaseConfig を、下の6項目へ貼り付けてください。
 // ============================================================
 const firebaseConfig = {
-  apiKey: "AIzaSyDCEBJN3giQRV3HB-ElqarkZCeJYXDbmo0",
-  authDomain: "project-2026-4cd01.firebaseapp.com",
-  projectId: "project-2026-4cd01",
-  storageBucket: "project-2026-4cd01.firebasestorage.app",
-  messagingSenderId: "580973025404",
-  appId: "1:580973025404:web:ea672d8fd945c0c89311f9",
-  measurementId: "G-5N66V7C6RZ"
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
 
 const ALLOWED_EMAILS = [
@@ -571,6 +587,51 @@ function renderProjectCard(p){
   `;
 }
 
+function displayValue(v, fallback='未設定'){ return (v === 0 || String(v || '').trim()) ? escapeHtml(v) : `<span class="muted">${fallback}</span>`; }
+function yen(v){
+  if(v === '' || v === null || v === undefined) return '<span class="muted">未設定</span>';
+  const n = Number(v); return Number.isFinite(n) ? '¥' + n.toLocaleString('ja-JP') : escapeHtml(v);
+}
+function renderOpsInfo(p){
+  const materials = [['ロゴ',p.materialLogo],['原稿',p.materialCopy],['写真',p.materialPhoto],['フォント',p.materialFont],['その他素材',p.materialOther]];
+  const approvals = [['デザイン確認',p.approvalDesign],['デザイン承認',p.approvalDesignFinal],['コーディング確認',p.approvalCoding],['最終確認',p.approvalFinal],['公開承認',p.approvalPublish]];
+  return `
+    <section class="info-section"><h3>制作仕様</h3><div class="info-grid cols3">
+      <div class="info-item"><div class="info-label">制作ページ数</div><div class="info-value">${displayValue(p.pageCount)}</div></div>
+      <div class="info-item"><div class="info-label">CMS</div><div class="info-value">${displayValue(p.cms)}</div></div>
+      <div class="info-item"><div class="info-label">レスポンシブ</div><div class="info-value">${displayValue(p.responsive)}</div></div>
+      <div class="info-item"><div class="info-label">フォーム</div><div class="info-value">${displayValue(p.hasForm)}</div></div>
+      <div class="info-item"><div class="info-label">アニメーション</div><div class="info-value">${displayValue(p.hasAnimation)}</div></div>
+      <div class="info-item"><div class="info-label">その他仕様</div><div class="info-value">${displayValue(p.specNote)}</div></div>
+    </div></section>
+    <section class="info-section"><h3>担当</h3><div class="info-grid cols3">
+      <div class="info-item"><div class="info-label">デザイン担当</div><div class="info-value">${displayValue(p.designOwner)}</div></div>
+      <div class="info-item"><div class="info-label">コーディング担当</div><div class="info-value">${displayValue(p.codingOwner)}</div></div>
+      <div class="info-item"><div class="info-label">クライアント確認担当</div><div class="info-value">${displayValue(p.clientOwner)}</div></div>
+    </div></section>
+    <section class="info-section"><h3>素材状況</h3><div class="info-grid cols3">
+      ${materials.map(([l,v])=>`<div class="info-item"><div class="info-label">${l}</div><div class="info-value"><span class="status-mini">${displayValue(v)}</span></div></div>`).join('')}
+    </div></section>
+    <section class="info-section"><h3>確認・承認</h3><div class="info-grid cols3">
+      ${approvals.map(([l,v])=>`<div class="info-item"><div class="info-label">${l}</div><div class="info-value"><span class="status-mini">${displayValue(v)}</span></div></div>`).join('')}
+    </div></section>
+    <section class="info-section"><h3>費用</h3><div class="info-grid cols3">
+      <div class="info-item"><div class="info-label">案件金額</div><div class="info-value">${yen(p.projectFee)}</div></div>
+      <div class="info-item"><div class="info-label">デザイン費</div><div class="info-value">${yen(p.designFee)}</div></div>
+      <div class="info-item"><div class="info-label">コーディング費</div><div class="info-value">${yen(p.codingFee)}</div></div>
+      <div class="info-item"><div class="info-label">その他費用</div><div class="info-value">${yen(p.otherFee)}</div></div>
+      <div class="info-item"><div class="info-label">請求状況</div><div class="info-value">${displayValue(p.invoiceStatus)}</div></div>
+      <div class="info-item"><div class="info-label">入金状況</div><div class="info-value">${displayValue(p.paymentStatus)}</div></div>
+    </div></section>
+    <section class="info-section"><h3>公開・納品</h3><div class="info-grid cols3">
+      <div class="info-item"><div class="info-label">公開予定日</div><div class="info-value">${p.publishPlanDate ? fmtDate(p.publishPlanDate) : '<span class="muted">未設定</span>'}</div></div>
+      <div class="info-item"><div class="info-label">公開日</div><div class="info-value">${p.publishDate ? fmtDate(p.publishDate) : '<span class="muted">未設定</span>'}</div></div>
+      <div class="info-item"><div class="info-label">納品状況</div><div class="info-value">${displayValue(p.deliveryStatus)}</div></div>
+      <div class="info-item"><div class="info-label">請求</div><div class="info-value">${displayValue(p.invoiceStatus)}</div></div>
+      <div class="info-item"><div class="info-label">入金</div><div class="info-value">${displayValue(p.paymentStatus)}</div></div>
+    </div></section>`;
+}
+
 function renderDetail(p){
   const ts = tasksFor(p.id).sort((a,b) => {
     if(!a.deadline && !b.deadline) return 0;
@@ -593,7 +654,7 @@ function renderDetail(p){
     </div>
 
     ${renderProjectLinks(p)}
-
+    ${renderOpsInfo(p)}
     ${renderRuler(p, ts)}
 
     <div class="section-title">
@@ -641,14 +702,16 @@ function linkItem(url, label){
 
 function renderProjectLinks(p){
   const old = linkItem(p.oldSite, '旧サイト');
+  const testSite = linkItem(p.testSite, 'テストサイト');
+  const liveSite = linkItem(p.liveSite, '本番サイト');
   const shared = [p.sharedLink1,p.sharedLink2,p.sharedLink3].map((u,i)=>linkItem(u, `共有リンク ${i+1}`)).filter(Boolean).join('');
   const refs = [p.referenceLink1,p.referenceLink2,p.referenceLink3].map((u,i)=>linkItem(u, `参考サイト ${i+1}`)).filter(Boolean).join('');
-  if(!old && !shared && !refs) return '';
+  if(!old && !testSite && !liveSite && !shared && !refs) return '';
   return `
     <section class="project-links">
       <h3 class="project-links-title">関連リンク</h3>
       <div class="link-groups">
-        <div class="link-group"><div class="link-group-label">旧サイト</div>${old || '<div class="link-empty">未登録</div>'}</div>
+        <div class="link-group"><div class="link-group-label">サイト</div>${old}${testSite}${liveSite}${(!old&&!testSite&&!liveSite) ? '<div class="link-empty">未登録</div>' : ''}</div>
         <div class="link-group"><div class="link-group-label">共有リンク</div>${shared || '<div class="link-empty">未登録</div>'}</div>
         <div class="link-group"><div class="link-group-label">参考サイト</div>${refs || '<div class="link-empty">未登録</div>'}</div>
       </div>
@@ -788,69 +851,100 @@ function closeModal(){
   if(overlay) overlay.remove();
 }
 
+function optionSet(value, options){
+  return options.map(o=>`<option value="${escapeAttr(o)}" ${value===o?'selected':''}>${escapeHtml(o)}</option>`).join('');
+}
 function openProjectModal(p){
   const isEdit = !!p;
+  const materialOpts=['未受領','一部受領','受領済み','不要'];
+  const approvalOpts=['未確認','確認中','修正中','OK','不要'];
   openModal(`
     <h3>${isEdit ? '案件を編集' : '新規案件'}</h3>
-    <div class="field"><label>案件名 *</label><input type="text" id="f-name" value="${escapeAttr(p?.name || '')}" placeholder="例: ◯◯様 ロゴデザイン"></div>
-    <div class="field"><label>相手・クライアント名</label><input type="text" id="f-client" value="${escapeAttr(p?.client || '')}" placeholder="例: 田中様"></div>
-    <div class="field"><label>納期</label><input type="date" id="f-deadline" value="${p?.deadline || ''}"></div>
-    <div class="field"><label>ステータス</label>
-      <select id="f-status">
-        <option value="進行中" ${(!p||p.status==='進行中')?'selected':''}>進行中</option>
-        <option value="保留" ${p?.status==='保留'?'selected':''}>保留</option>
-        <option value="完了" ${p?.status==='完了'?'selected':''}>完了</option>
-      </select>
+    <div class="field"><label>案件名 *</label><input type="text" id="f-name" value="${escapeAttr(p?.name || '')}"></div>
+    <div class="field"><label>相手・クライアント名</label><input type="text" id="f-client" value="${escapeAttr(p?.client || '')}"></div>
+    <div class="field-row">
+      <div class="field"><label>納期</label><input type="date" id="f-deadline" value="${p?.deadline || ''}"></div>
+      <div class="field"><label>公開予定日</label><input type="date" id="f-publishPlanDate" value="${p?.publishPlanDate || ''}"></div>
     </div>
-    <div class="field"><label>メモ</label><textarea id="f-memo" rows="3" placeholder="共有しておきたい情報など">${escapeHtml(p?.memo || '')}</textarea></div>
-    <div class="field"><label>旧サイト URL</label><input type="text" id="f-oldSite" value="${escapeAttr(p?.oldSite || '')}" placeholder="https://example.com"></div>
-    <div class="field"><label>共有リンク（最大3件）</label><div class="link-fields">
-      <input type="text" id="f-shared1" value="${escapeAttr(p?.sharedLink1 || '')}" placeholder="共有リンク 1">
-      <input type="text" id="f-shared2" value="${escapeAttr(p?.sharedLink2 || '')}" placeholder="共有リンク 2">
-      <input type="text" id="f-shared3" value="${escapeAttr(p?.sharedLink3 || '')}" placeholder="共有リンク 3">
-    </div></div>
-    <div class="field"><label>参考サイト（最大3件）</label><div class="link-fields">
-      <input type="text" id="f-reference1" value="${escapeAttr(p?.referenceLink1 || '')}" placeholder="参考サイト 1">
-      <input type="text" id="f-reference2" value="${escapeAttr(p?.referenceLink2 || '')}" placeholder="参考サイト 2">
-      <input type="text" id="f-reference3" value="${escapeAttr(p?.referenceLink3 || '')}" placeholder="参考サイト 3">
-    </div></div>
+    <div class="field"><label>ステータス</label><select id="f-status">${optionSet(p?.status || '進行中',['進行中','保留','完了'])}</select></div>
+    <div class="field"><label>メモ</label><textarea id="f-memo" rows="4">${escapeHtml(p?.memo || '')}</textarea></div>
+
+    <div class="modal-section"><h4>関連リンク</h4>
+      <div class="field"><label>旧サイト URL</label><input type="text" id="f-oldSite" value="${escapeAttr(p?.oldSite || '')}"></div>
+      <div class="field"><label>テストサイト URL</label><input type="text" id="f-testSite" value="${escapeAttr(p?.testSite || '')}"></div>
+      <div class="field"><label>本番サイト URL</label><input type="text" id="f-liveSite" value="${escapeAttr(p?.liveSite || '')}"></div>
+      <div class="field"><label>共有リンク（最大3件）</label><div class="link-fields">
+        <input type="text" id="f-shared1" value="${escapeAttr(p?.sharedLink1 || '')}" placeholder="Figma / Drive など">
+        <input type="text" id="f-shared2" value="${escapeAttr(p?.sharedLink2 || '')}">
+        <input type="text" id="f-shared3" value="${escapeAttr(p?.sharedLink3 || '')}">
+      </div></div>
+      <div class="field"><label>参考サイト（最大3件）</label><div class="link-fields">
+        <input type="text" id="f-reference1" value="${escapeAttr(p?.referenceLink1 || '')}">
+        <input type="text" id="f-reference2" value="${escapeAttr(p?.referenceLink2 || '')}">
+        <input type="text" id="f-reference3" value="${escapeAttr(p?.referenceLink3 || '')}">
+      </div></div>
+    </div>
+
+    <div class="modal-section"><h4>制作仕様</h4>
+      <div class="field-row"><div class="field"><label>制作ページ数</label><input type="number" id="f-pageCount" min="0" value="${escapeAttr(p?.pageCount ?? '')}"></div>
+      <div class="field"><label>CMS</label><input type="text" id="f-cms" value="${escapeAttr(p?.cms || '')}" placeholder="WordPress / なし"></div></div>
+      <div class="field-row"><div class="field"><label>レスポンシブ対応</label><select id="f-responsive">${optionSet(p?.responsive || 'PC / Tablet / SP',['PC / Tablet / SP','PC / SP','PCのみ','その他'])}</select></div>
+      <div class="field"><label>フォーム</label><select id="f-hasForm">${optionSet(p?.hasForm || 'なし',['なし','あり','未定'])}</select></div></div>
+      <div class="field"><label>アニメーション</label><select id="f-hasAnimation">${optionSet(p?.hasAnimation || 'なし',['なし','あり','未定'])}</select></div>
+      <div class="field"><label>その他仕様</label><textarea id="f-specNote" rows="2">${escapeHtml(p?.specNote || '')}</textarea></div>
+    </div>
+
+    <div class="modal-section"><h4>担当</h4><div class="field-row">
+      <div class="field"><label>デザイン担当</label><input type="text" id="f-designOwner" value="${escapeAttr(p?.designOwner || '')}"></div>
+      <div class="field"><label>コーディング担当</label><input type="text" id="f-codingOwner" value="${escapeAttr(p?.codingOwner || '')}"></div>
+    </div><div class="field"><label>クライアント確認担当</label><input type="text" id="f-clientOwner" value="${escapeAttr(p?.clientOwner || '')}"></div></div>
+
+    <div class="modal-section"><h4>素材状況</h4>
+      ${[['Logo','ロゴ'],['Copy','原稿'],['Photo','写真'],['Font','フォント'],['Other','その他素材']].map(([id,l])=>`<div class="field"><label>${l}</label><select id="f-material${id}">${optionSet(p?.['material'+id] || '未受領',materialOpts)}</select></div>`).join('')}
+    </div>
+
+    <div class="modal-section"><h4>確認・承認</h4>
+      ${[['Design','デザイン確認'],['DesignFinal','デザイン承認'],['Coding','コーディング確認'],['Final','最終確認'],['Publish','公開承認']].map(([id,l])=>`<div class="field"><label>${l}</label><select id="f-approval${id}">${optionSet(p?.['approval'+id] || '未確認',approvalOpts)}</select></div>`).join('')}
+    </div>
+
+    <div class="modal-section"><h4>費用</h4>
+      <div class="field-row"><div class="field"><label>案件金額（円）</label><input type="number" min="0" id="f-projectFee" value="${escapeAttr(p?.projectFee ?? '')}"></div>
+      <div class="field"><label>デザイン費（円）</label><input type="number" min="0" id="f-designFee" value="${escapeAttr(p?.designFee ?? '')}"></div></div>
+      <div class="field-row"><div class="field"><label>コーディング費（円）</label><input type="number" min="0" id="f-codingFee" value="${escapeAttr(p?.codingFee ?? '')}"></div>
+      <div class="field"><label>その他費用（円）</label><input type="number" min="0" id="f-otherFee" value="${escapeAttr(p?.otherFee ?? '')}"></div></div>
+      <div class="field-row"><div class="field"><label>請求状況</label><select id="f-invoiceStatus">${optionSet(p?.invoiceStatus || '未請求',['未請求','請求予定','請求済み','不要'])}</select></div>
+      <div class="field"><label>入金状況</label><select id="f-paymentStatus">${optionSet(p?.paymentStatus || '未入金',['未入金','一部入金','入金済み','不要'])}</select></div></div>
+    </div>
+
+    <div class="modal-section"><h4>公開・納品</h4>
+      <div class="field-row"><div class="field"><label>公開日</label><input type="date" id="f-publishDate" value="${p?.publishDate || ''}"></div>
+      <div class="field"><label>納品状況</label><select id="f-deliveryStatus">${optionSet(p?.deliveryStatus || '未納品',['未納品','納品準備中','納品済み','不要'])}</select></div></div>
+    </div>
+
     <div class="modal-actions">
       <div>${isEdit ? '<button class="danger-link" id="deleteFromModal">この案件を削除</button>' : ''}</div>
-      <div class="right">
-        <button class="btn" id="cancelModal">キャンセル</button>
-        <button class="btn primary" id="saveProject">保存</button>
-      </div>
+      <div class="right"><button class="btn" id="cancelModal">キャンセル</button><button class="btn primary" id="saveProject">保存</button></div>
     </div>
   `);
   document.getElementById('cancelModal').addEventListener('click', closeModal);
   if(isEdit) document.getElementById('deleteFromModal').addEventListener('click', () => { closeModal(); deleteProject(p); });
   document.getElementById('saveProject').addEventListener('click', async () => {
-    const name = document.getElementById('f-name').value.trim();
-    if(!name){ showToast('案件名を入力してください'); return; }
-    const data = {
-      name,
-      client: document.getElementById('f-client').value.trim(),
-      deadline: document.getElementById('f-deadline').value,
-      status: document.getElementById('f-status').value,
-      memo: document.getElementById('f-memo').value.trim(),
-      oldSite: document.getElementById('f-oldSite').value.trim(),
-      sharedLink1: document.getElementById('f-shared1').value.trim(),
-      sharedLink2: document.getElementById('f-shared2').value.trim(),
-      sharedLink3: document.getElementById('f-shared3').value.trim(),
-      referenceLink1: document.getElementById('f-reference1').value.trim(),
-      referenceLink2: document.getElementById('f-reference2').value.trim(),
-      referenceLink3: document.getElementById('f-reference3').value.trim(),
+    const val=id=>document.getElementById(id).value.trim();
+    const name=val('f-name'); if(!name){showToast('案件名を入力してください');return;}
+    const data={
+      name, client:val('f-client'), deadline:val('f-deadline'), publishPlanDate:val('f-publishPlanDate'),
+      status:val('f-status'), memo:val('f-memo'), oldSite:val('f-oldSite'), testSite:val('f-testSite'), liveSite:val('f-liveSite'),
+      sharedLink1:val('f-shared1'),sharedLink2:val('f-shared2'),sharedLink3:val('f-shared3'),
+      referenceLink1:val('f-reference1'),referenceLink2:val('f-reference2'),referenceLink3:val('f-reference3'),
+      pageCount:val('f-pageCount'),cms:val('f-cms'),responsive:val('f-responsive'),hasForm:val('f-hasForm'),hasAnimation:val('f-hasAnimation'),specNote:val('f-specNote'),
+      designOwner:val('f-designOwner'),codingOwner:val('f-codingOwner'),clientOwner:val('f-clientOwner'),
+      materialLogo:val('f-materialLogo'),materialCopy:val('f-materialCopy'),materialPhoto:val('f-materialPhoto'),materialFont:val('f-materialFont'),materialOther:val('f-materialOther'),
+      approvalDesign:val('f-approvalDesign'),approvalDesignFinal:val('f-approvalDesignFinal'),approvalCoding:val('f-approvalCoding'),approvalFinal:val('f-approvalFinal'),approvalPublish:val('f-approvalPublish'),
+      projectFee:val('f-projectFee'),designFee:val('f-designFee'),codingFee:val('f-codingFee'),otherFee:val('f-otherFee'),
+      invoiceStatus:val('f-invoiceStatus'),paymentStatus:val('f-paymentStatus'),publishDate:val('f-publishDate'),deliveryStatus:val('f-deliveryStatus')
     };
-    if(isEdit){
-      Object.assign(p, data);
-    } else {
-      const newP = { id: uid(), createdAt: todayStr(), ...data };
-      state.projects.push(newP);
-      selectedProjectId = newP.id;
-    }
-    closeModal();
-    render();
-    await saveData();
+    if(isEdit) Object.assign(p,data); else { const newP={id:uid(),createdAt:todayStr(),...data}; state.projects.push(newP); selectedProjectId=newP.id; }
+    closeModal(); render(); await saveData();
   });
 }
 
