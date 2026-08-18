@@ -305,6 +305,42 @@
   }
   .email-login-note{margin-top:12px;font-size:11px;line-height:1.6;color:var(--ink-soft);}
 
+
+  /* Monochrome base + soft status colors */
+  :root{
+    --paper:#fff;--paper-warm:#fafafa;--ink:#171717;--ink-soft:#666;
+    --line:#dedede;--line-strong:#bebebe;--accent:#171717;--accent-dark:#000;
+    --accent-soft:#f2f2f2;--grey-soft:#f4f4f4;
+    --status-todo:#666168;--status-todo-bg:#f0edf1;
+    --status-progress:#73515e;--status-progress-bg:#f4edef;
+    --status-done:#52675d;--status-done-bg:#eaf0ed;
+    --status-hold:#76664f;--status-hold-bg:#f3efe7;
+  }
+  body{background:#f3f3f3;color:#171717}
+  .topbar{background:#fff;border-bottom-color:#d8d8d8}
+  .brand-mark{background:#171717;color:#fff}
+  .panel,.detail,.sidebar,.modal,.lock-screen{background:#fff}
+  .btn{background:#fff;color:#171717;border-color:#cfcfcf}
+  .btn:hover{background:#f3f3f3;border-color:#aaa}
+  .btn.primary{background:#171717;color:#fff;border-color:#171717}
+  .btn.primary:hover{background:#000;border-color:#000}
+  input,textarea,select{background:#fff!important;color:#171717!important;border-color:#d3d3d3!important}
+  input:focus,textarea:focus,select:focus{border-color:#555!important;box-shadow:0 0 0 2px rgba(0,0,0,.06)!important}
+  .project-card{background:#fff;border-color:#e1e1e1}
+  .project-card:hover{background:#fafafa;border-color:#aaa}
+  .project-card.active{background:#f7f7f7;border-color:#171717;box-shadow:inset 3px 0 0 #171717}
+  .tab,.filter-btn{background:#f4f4f4;color:#5d5d5d;border-color:#dedede}
+  .tab.active,.filter-btn.active{background:#171717;color:#fff;border-color:#171717}
+  .progress-track{background:#e8e8e8}.progress-fill{background:#333}
+  .user-chip{background:#f4f4f4;color:#333;border-color:#ddd}
+  .notify-badge{background:#171717;color:#fff;border-color:#fff}
+  .notification-item,.auth-help{background:#fff;border-color:#dedede}
+  .badge.status-todo{background:var(--status-todo-bg);color:var(--status-todo);border-color:#ddd7df}
+  .badge.status-progress{background:var(--status-progress-bg);color:var(--status-progress);border-color:#e4d5da}
+  .badge.status-done{background:var(--status-done-bg);color:var(--status-done);border-color:#d4e0d9}
+  .badge.status-hold{background:var(--status-hold-bg);color:var(--status-hold);border-color:#e4daca}
+  .badge.red,.badge.accent{background:#f1f1f1;color:#303030;border-color:#d8d8d8}
+
 </style>
 </head>
 <body class="locked">
