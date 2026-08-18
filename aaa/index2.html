@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>案件シェアボード</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700&family=IBM+Plex+Sans+JP:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5EEED;
+    --surface:#FFFFFF;
+    --ink:#171214;
+    --ink-soft:#6C6064;
+    --line:#E3D7DB;
+    --teal:#6B1530;
+    --teal-soft:#F4E8EC;
+    --amber:#9A4A54;
+    --amber-soft:#F7EAEC;
+    --brick:#C02A45;
+    --brick-soft:#FBE7EB;
+    --grey:#9D9296;
+    --grey-soft:#F3EFF0;
+    /* status colors */
+    --status-todo:#74686D;
+    --status-todo-bg:#F0ECEE;
+    --status-progress:#7C2440;
+    --status-progress-bg:#F5E8EC;
+    --status-done:#416A5A;
+    --status-done-bg:#E8F0EC;
+    --status-hold:#8A673F;
+    --status-hold-bg:#F4EDE3;
+    --cherry:#6B1530;
+    --cherry-dark:#2A0B15;
+    --cherry-mid:#8A2744;
+    --radius:14px;
+    --font-display:'Zen Kaku Gothic New', sans-serif;
+    --font-body:'IBM Plex Sans JP', sans-serif;
+    --font-mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.5;
+    min-height:100vh;
+  }
+  ::selection{background:var(--teal-soft);}
+  :focus-visible{outline:2px solid var(--teal); outline-offset:2px;}
+
+  .app{max-width:1320px;margin:0 auto;padding:28px 20px 60px;}
+
+  header.top{
+    display:flex; align-items:flex-end; justify-content:space-between;
+    gap:16px; flex-wrap:wrap;
+    padding-bottom:18px; margin-bottom:20px;
+    border-bottom:1px solid #D9C8CC;
+  }
+  .brand h1{
+    font-family:var(--font-display); font-weight:700;
+    font-size:26px; margin:0 0 4px; letter-spacing:.01em; color:var(--ink);
+  }
+  .brand p{margin:0; color:#6C5058; font-size:13px;}
+  .top-actions{display:flex; align-items:center; gap:10px;}
+  .sync-status{font-family:var(--font-mono); font-size:11px; color:#6C5058;}
+
+  button{font-family:var(--font-body); cursor:pointer; border:none;}
+  .btn{
+    padding:9px 16px; border-radius:999px; font-size:13px; font-weight:600;
+    background:var(--surface); color:var(--ink); border:1.5px solid var(--ink);
+    transition:transform .12s ease, background .12s ease;
+  }
+  .btn:hover{transform:translateY(-1px);}
+  .btn.primary{background:var(--ink); color:#fff;}
+  .btn.icon{padding:9px 12px;}
+  .btn:disabled{opacity:.5; cursor:default; transform:none;}
+
+  .layout{display:grid; grid-template-columns:340px minmax(0,1fr); gap:24px; align-items:start;}
+  @media (max-width:880px){ .layout{grid-template-columns:1fr;} }
+
+  .panel{background:var(--surface); border:1px solid #E2D5D7; border-radius:var(--radius); box-shadow:0 12px 32px rgba(55,20,30,.10); }
+
+  /* --- Sidebar --- */
+  .sidebar-head{padding:16px 16px 10px;}
+  .search-row{display:flex; gap:8px; margin-bottom:10px;}
+  input[type=text], input[type=date], select, textarea{
+    font-family:var(--font-body); font-size:13px; color:var(--ink);
+    border:1.5px solid var(--line); border-radius:8px; padding:8px 10px;
+    background:#fff; width:100%;
+  }
+  .search-row input{flex:1;}
+  .tabs{display:flex; gap:4px; border-bottom:1px solid var(--line); padding:0 16px;}
+  .tab{
+    flex:1; text-align:center; padding:9px 4px; font-size:12.5px; font-weight:600;
+    color:var(--ink-soft); background:transparent; border-bottom:2px solid transparent;
+  }
+  .tab.active{color:var(--teal); border-bottom-color:var(--teal);}
+  .filter-row{padding:10px 16px 0;}
+
+  .project-list{list-style:none; margin:0; padding:8px; max-height:70vh; overflow-y:auto;}
+  .project-card{
+    padding:12px 12px; border-radius:8px; margin-bottom:6px; cursor:pointer;
+    border:1.5px solid transparent; transition:background .1s;
+  }
+  .project-card:hover{background:var(--grey-soft);}
+  .project-card.selected{background:var(--teal-soft); border-color:var(--teal);}
+  .pc-top{display:flex; justify-content:space-between; align-items:flex-start; gap:8px;}
+  .pc-name{font-weight:600; font-size:14.5px;}
+  .pc-client{color:var(--ink-soft); font-size:12px; margin-top:2px;}
+  .badge{
+    font-family:var(--font-mono); font-size:10.5px; padding:2px 8px; border-radius:999px;
+    white-space:nowrap; font-weight:500;
+  }
+  .badge.teal{background:var(--teal-soft); color:var(--teal);}
+  .badge.amber{background:var(--amber-soft); color:var(--amber);}
+  .badge.brick{background:var(--brick-soft); color:var(--brick);}
+  .badge.grey{background:var(--grey-soft); color:var(--ink-soft);}
+  .badge.status-todo{background:var(--status-todo-bg); color:var(--status-todo); border:1px solid #DED5D9;}
+  .badge.status-progress{background:var(--status-progress-bg); color:var(--status-progress); border:1px solid #E6CCD4;}
+  .badge.status-done{background:var(--status-done-bg); color:var(--status-done); border:1px solid #CFDFD7;}
+  .badge.status-hold{background:var(--status-hold-bg); color:var(--status-hold); border:1px solid #E5D7C3;}
+  .pc-meta{display:flex; justify-content:space-between; align-items:center; margin-top:8px; font-size:11.5px; color:var(--ink-soft); font-family:var(--font-mono);}
+  .progress-track{height:4px; background:var(--grey-soft); border-radius:2px; margin-top:8px; overflow:hidden;}
+  .progress-fill{height:100%; background:var(--teal);}
+  .empty-note{padding:30px 20px; text-align:center; color:var(--ink-soft); font-size:13px;}
+
+  /* --- Detail --- */
+  .detail{padding:24px 26px; min-height:400px;}
+  .detail-empty{padding:80px 20px; text-align:center; color:var(--ink-soft);}
+  .detail-empty h3{font-family:var(--font-display); color:var(--ink); font-size:18px;}
+
+  .detail-head{display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; margin-bottom:6px;}
+  .detail-head h2{font-family:var(--font-display); font-size:22px; margin:0;}
+  .detail-sub{color:var(--ink-soft); font-size:13px; margin-top:4px;}
+  .detail-actions{display:flex; gap:8px;}
+  .detail-memo{margin-top:10px; font-size:13px; color:var(--ink-soft); white-space:pre-wrap;}
+
+  /* Project links */
+  .project-links{margin:18px 0 8px;padding:16px 18px;border:1px solid var(--line);border-radius:12px;background:#fff;}
+  .project-links-title{font-family:var(--font-display);font-size:14px;margin:0 0 12px;color:var(--ink);}
+  .link-groups{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
+  .link-group{min-width:0;}
+  .link-group-label{font-size:11px;font-weight:700;color:var(--cherry);margin-bottom:6px;}
+  .project-link{display:flex;align-items:center;gap:6px;min-width:0;margin:5px 0;font-size:12.5px;color:var(--ink);text-decoration:none;}
+  .project-link:hover{color:var(--cherry);text-decoration:underline;}
+  .project-link span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .project-link::before{content:"↗";font-family:var(--font-mono);color:var(--cherry);flex:0 0 auto;}
+  .link-empty{font-size:12px;color:var(--ink-soft);}
+  .link-fields{display:grid;grid-template-columns:1fr;gap:8px;}
+  .link-fields .field{margin-bottom:0;}
+  @media(max-width:720px){.link-groups{grid-template-columns:1fr;}}
+
+  /* Schedule timeline */
+  .schedule-card{
+    margin:28px 0 24px; padding:18px 18px 16px;
+    border:1px solid var(--line); border-radius:12px; background:#fff;
+  }
+  .schedule-title{font-family:var(--font-display); font-size:15px; margin:0 0 28px; color:var(--ink);}
+  .timeline{position:relative; height:158px; margin:0 16px; padding-top:4px;}
+  .timeline-line{position:absolute; left:0; right:0; top:58px; height:2px; background:var(--ink);}
+  .timeline-line::before,.timeline-line::after{content:"";position:absolute;top:-5px;width:2px;height:12px;background:var(--ink);}
+  .timeline-line::before{left:0}.timeline-line::after{right:0}
+  .timeline-end{position:absolute; top:0; font-family:var(--font-mono); font-size:11px; line-height:1.45; color:var(--cherry); font-weight:600; white-space:nowrap; z-index:3;}
+  .timeline-end.start{left:0;text-align:left}.timeline-end.end{right:0;text-align:right}
+  .timeline-end strong{display:block;font-family:var(--font-body);font-size:11px;color:var(--cherry);}
+  .timeline-today{position:absolute; top:49px; height:58px; width:1px; background:var(--brick); transform:translateX(-50%); z-index:2;}
+  .timeline-today-label{position:absolute; top:82px; transform:translateX(-50%); text-align:center; color:var(--brick); font-size:11px; font-weight:700; white-space:nowrap; line-height:1.45; background:var(--surface); padding:3px 7px; border-radius:6px; z-index:4;}
+  .timeline-today-label.near-start{transform:none;text-align:left;}
+  .timeline-today-label.near-end{transform:translateX(-100%);text-align:right;}
+  .timeline-today-label span{display:block;font-family:var(--font-mono);font-weight:500;}
+  .timeline-start-dot,.timeline-end-dot{position:absolute;top:53px;width:12px;height:12px;border-radius:50%;background:#fff;border:3px solid var(--cherry);z-index:2;}
+  .timeline-start-dot{left:0;transform:translateX(-50%)}.timeline-end-dot{right:0;transform:translateX(50%)}
+  .timeline-tick{position:absolute;top:59px;width:1px;height:8px;background:#A99CA1;transform:translateX(-50%);}
+  .timeline-tick-label{position:absolute;top:72px;transform:translateX(-50%);font-family:var(--font-mono);font-size:10px;color:var(--ink-soft);white-space:nowrap;}
+  .timeline-period{position:absolute;left:50%;bottom:2px;transform:translateX(-50%);font-family:var(--font-mono);font-size:10.5px;color:var(--ink-soft);white-space:nowrap;}
+  @media(max-width:620px){
+    .schedule-card{padding:16px 14px 12px;overflow-x:auto;}
+    .timeline{min-width:560px;}
+  }
+
+  /* Task table */
+  .section-title{display:flex; justify-content:space-between; align-items:center; margin:28px 0 10px;}
+  .section-title h3{font-family:var(--font-display); font-size:15px; margin:0;}
+  table.tasks{width:100%; border-collapse:collapse; font-size:13px;}
+  table.tasks th{
+    text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.04em;
+    color:var(--ink-soft); font-weight:600; padding:6px 8px; border-bottom:1.5px solid var(--ink);
+  }
+  table.tasks td{padding:9px 8px; border-bottom:1px solid var(--line); vertical-align:middle;}
+  table.tasks tr:last-child td{border-bottom:none;}
+  .task-name{font-weight:600;}
+  .row-actions{display:flex; gap:6px;}
+  .row-actions button{background:none; color:var(--ink-soft); font-size:12px; text-decoration:underline; padding:2px;}
+  .row-actions button:hover{color:var(--ink);}
+
+
+  /* Comments */
+  .comments-section{margin-top:30px;}
+  .comment-form{display:flex; gap:8px; align-items:flex-end; margin-bottom:14px;}
+  .comment-form .field{margin:0; flex:1;}
+  .comment-form textarea{min-height:72px; resize:vertical;}
+  .comment-list{display:flex; flex-direction:column; gap:10px;}
+  .comment-item{border:1px solid var(--line); border-radius:9px; padding:11px 12px; background:#fff;}
+  .comment-head{display:flex; justify-content:space-between; gap:12px; align-items:center; margin-bottom:5px;}
+  .comment-author{font-weight:600; font-size:12.5px;}
+  .comment-meta{font-family:var(--font-mono); font-size:10.5px; color:var(--ink-soft); white-space:nowrap;}
+  .comment-text{font-size:13px; white-space:pre-wrap; overflow-wrap:anywhere;}
+  .comment-actions{margin-top:7px; text-align:right;}
+  .comment-actions button{background:none; color:var(--ink-soft); font-size:11.5px; text-decoration:underline; padding:0;}
+  .comment-actions button:hover{color:var(--ink);}
+  @media (max-width:620px){.comment-form{flex-direction:column; align-items:stretch;}.comment-form .btn{align-self:flex-end;}}
+
+  /* Modal */
+  .overlay{
+    position:fixed; inset:0; background:rgba(42,11,21,.72);
+    display:flex; align-items:center; justify-content:center; padding:20px; z-index:50;
+  }
+  .modal{
+    background:var(--surface); border-radius:12px; width:100%; max-width:440px;
+    padding:24px; max-height:88vh; overflow-y:auto;
+  }
+  .modal h3{font-family:var(--font-display); margin:0 0 16px; font-size:18px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block; font-size:12px; font-weight:600; color:var(--ink-soft); margin-bottom:5px;}
+  .modal-actions{display:flex; justify-content:space-between; align-items:center; margin-top:20px; gap:10px;}
+  .modal-actions .right{display:flex; gap:8px;}
+  .danger-link{background:none; color:var(--brick); font-size:12.5px; text-decoration:underline;}
+
+  .toast{
+    position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
+    background:var(--ink); color:#fff; padding:10px 18px; border-radius:999px;
+    font-size:13px; opacity:0; pointer-events:none; transition:opacity .25s, transform .25s;
+    font-family:var(--font-mono);
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(-4px);}
+
+  .footnote{margin-top:26px; font-size:11.5px; color:#6C5058; text-align:center;}
+  .loading{padding:60px 20px; text-align:center; color:var(--ink-soft); font-family:var(--font-mono); font-size:13px;}
+
+  body.locked .top-actions{display:none;}
+  .lock-screen{
+    max-width:380px; margin:60px auto; padding:32px 28px; text-align:center;
+  }
+  .lock-icon{font-size:28px; margin-bottom:8px;}
+  .lock-screen h3{font-family:var(--font-display); font-size:19px; margin:0 0 6px;}
+  .lock-screen p{color:var(--ink-soft); font-size:13px; margin:0 0 20px;}
+  .lock-screen .field{text-align:left;}
+  .lock-error{color:var(--brick); font-size:12.5px; margin-top:-6px; margin-bottom:14px; min-height:16px;}
+  .lock-actions{display:flex; flex-direction:column; gap:10px; margin-top:6px;}
+
+  .user-chip{font-size:12px;font-weight:600;color:var(--ink);max-width:210px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .google-login{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;}
+  .google-mark{font-family:Arial,sans-serif;font-size:18px;font-weight:700;}
+  .config-note{margin-top:14px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:11.5px;color:var(--ink-soft);text-align:left;}
+  .comment-login-user{min-height:38px;display:flex;align-items:center;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;background:#f8f6f5;font-size:12.5px;font-weight:600;}
+
+  /* --- Project operation cards --- */
+  .info-section{margin-top:24px;border:1px solid #E4D5D7;border-radius:14px;padding:18px;background:#fff;}
+  .info-section h3{font-family:var(--font-display);font-size:15px;margin:0 0 14px;}
+  .info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 18px;}
+  .info-grid.cols3{grid-template-columns:repeat(3,minmax(0,1fr));}
+  .info-item{min-width:0;padding:10px 0;border-bottom:1px solid #EFE6E7;}
+  .info-label{font-size:10.5px;color:var(--ink-soft);font-weight:600;margin-bottom:3px;}
+  .info-value{font-size:13px;font-weight:600;overflow-wrap:anywhere;}
+  .info-value.muted{color:var(--ink-soft);font-weight:500;}
+  .status-mini{display:inline-block;padding:3px 8px;border-radius:999px;background:#F5EEED;font-size:11px;}
+  .modal-section{margin:22px 0 8px;padding-top:18px;border-top:1px solid var(--line);}
+  .modal-section h4{font-family:var(--font-display);font-size:14px;margin:0 0 12px;}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  input[type=number]{font-family:var(--font-body);font-size:13px;color:var(--ink);border:1.5px solid var(--line);border-radius:8px;padding:8px 10px;background:#fff;width:100%;}
+  @media(max-width:700px){.info-grid,.info-grid.cols3,.field-row{grid-template-columns:1fr;}}
+
+
+  /* --- In-board notifications --- */
+  .notify-btn{position:relative;}
+  .notify-badge{
+    position:absolute; top:-6px; right:-6px; min-width:19px; height:19px;
+    padding:0 5px; border-radius:999px; background:#1B2430; color:#fff;
+    border:2px solid #F5EEED; font:600 10px/15px var(--font-mono);
+    display:none; align-items:center; justify-content:center;
+  }
+  .notify-badge.show{display:flex;}
+  .notification-list{display:flex;flex-direction:column;gap:8px;}
+  .notification-item{
+    width:100%;text-align:left;background:#fff;border:1px solid #E4D5D7;
+    border-radius:10px;padding:11px 12px;color:var(--ink);
+  }
+  .notification-item:hover{background:#FAF6F5;}
+  .notification-project{font-size:12px;font-weight:700;margin-bottom:3px;}
+  .notification-meta{font-size:10.5px;color:var(--ink-soft);margin-bottom:5px;}
+  .notification-text{font-size:12.5px;line-height:1.55;overflow-wrap:anywhere;}
+  .notification-empty{padding:28px 10px;text-align:center;color:var(--ink-soft);font-size:13px;}
+  .notification-tools{display:flex;justify-content:flex-end;margin:-4px 0 12px;}
+
+</style>
+</head>
+<body class="locked">
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <h1>案件シェアボード</h1>
+      <p>案件と進行スケジュールを、やり取りする相手とそのまま共有</p>
+    </div>
+    <div class="top-actions">
+      <span class="sync-status" id="syncStatus">読み込み中…</span>
+      <button class="btn icon" id="refreshBtn" title="最新の状態に更新">🔄 更新</button>
+      <button class="btn icon notify-btn" id="notifyBtn" title="未読コメントを確認">🔔 通知<span class="notify-badge" id="notifyBadge"></span></button>
+      <span class="user-chip" id="userChip"></span>
+      <button class="btn icon" id="logoutBtn" title="Googleアカウントからログアウト">ログアウト</button>
+      <button class="btn primary" id="newProjectBtn">＋ 新規案件</button>
+    </div>
+  </header>
+
+  <div id="root">
+    <div class="loading">読み込み中…</div>
+  </div>
+
+  <p class="footnote">このボードは許可されたGoogleアカウントのみ閲覧・編集できます。保存内容とコメント通知はFirestoreを通じて2人にリアルタイム反映されます。</p>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js';
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js';
+import { getFirestore, doc, getDoc, setDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js';
+
+// ============================================================
+// Firebase コンソール > プロジェクトの設定 > 全般 > マイアプリ > Webアプリ
+// に表示される firebaseConfig を、下の6項目へ貼り付けてください。
+// ============================================================
+const firebaseConfig = {
+  apiKey: "AIzaSyDCEBJN3giQRV3HB-ElqarkZCeJYXDbmo0",
+  authDomain: "project-2026-4cd01.firebaseapp.com",
+  projectId: "project-2026-4cd01",
+  storageBucket: "project-2026-4cd01.firebasestorage.app",
+  messagingSenderId: "580973025404",
+  appId: "1:580973025404:web:ea672d8fd945c0c89311f9",
+  measurementId: "G-5N66V7C6RZ"
+};
+
+const ALLOWED_EMAILS = [
+  'eniro.web@gmail.com',
+  'sunitydesign@gmail.com'
+];
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+auth.useDeviceLanguage();
+const db = getFirestore(app);
+const boardRef = doc(db, 'boards', 'shared');
+const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({ prompt: 'select_account' });
+
+let authenticated = false;
+let currentUser = null;
+let unsubscribeBoard = null;
+let state = { projects: [], tasks: [], comments: [] };
+let sortMode = 'deadline'; // name | deadline | created
+let statusFilter = 'all';
+let searchQuery = '';
+let selectedProjectId = null;
+let modalOpen = false;
+
+function uid(){ return (crypto.randomUUID ? crypto.randomUUID() : 'id-' + Date.now() + '-' + Math.random().toString(16).slice(2)); }
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+function fmtDate(d){
+  if(!d) return '未設定';
+  const dt = new Date(d);
+  if(isNaN(dt)) return '未設定';
+  return `${dt.getFullYear()}/${String(dt.getMonth()+1).padStart(2,'0')}/${String(dt.getDate()).padStart(2,'0')}`;
+}
+function daysUntil(d){
+  if(!d) return null;
+  const target = new Date(d); const now = new Date(todayStr());
+  return Math.round((target - now) / 86400000);
+}
+
+function firebaseConfigReady(){
+  return firebaseConfig.apiKey !== 'YOUR_API_KEY' && !firebaseConfig.projectId.startsWith('YOUR_');
+}
+
+function renderGoogleLogin(errorMsg=''){
+  document.body.classList.add('locked');
+  document.getElementById('root').innerHTML = `
+    <div class="panel lock-screen">
+      <div class="lock-icon">◉</div>
+      <h3>Googleでログイン</h3>
+      <p>許可された2つのGoogleアカウントだけが、この案件ボードを利用できます。</p>
+      <div class="lock-error">${errorMsg ? escapeHtml(errorMsg) : ''}</div>
+      <div class="lock-actions">
+        <button class="btn primary google-login" id="googleLoginBtn"><span class="google-mark">G</span> Googleでログイン</button>
+      </div>
+      ${firebaseConfigReady() ? '' : '<div class="config-note">Firebase設定がまだ未入力です。HTML内の <b>firebaseConfig</b> に、Firebaseコンソールで表示されるWebアプリ設定を貼り付けてください。</div>'}
+    </div>`;
+  const btn=document.getElementById('googleLoginBtn');
+  btn.disabled=!firebaseConfigReady();
+  btn.addEventListener('click', async()=>{
+    try{
+      await signInWithPopup(auth, googleProvider);
+    }catch(e){
+      console.error('Firebase Authentication error:', e);
+      const code = e?.code || 'unknown';
+      const messages = {
+        'auth/popup-blocked': 'Googleログインのポップアップがブラウザにブロックされています。ポップアップを許可して、もう一度お試しください。',
+        'auth/popup-closed-by-user': 'Googleログイン画面が途中で閉じられました。もう一度「Googleでログイン」を押してください。',
+        'auth/cancelled-popup-request': 'Googleログイン処理が途中でキャンセルされました。もう一度お試しください。',
+        'auth/unauthorized-domain': 'このサイトのドメインがFirebase Authenticationで承認されていません。',
+        'auth/operation-not-allowed': 'Firebase AuthenticationでGoogleログインが有効になっていません。',
+        'auth/network-request-failed': 'ネットワーク通信に失敗しました。インターネット接続やブラウザの通信制限を確認してください。'
+      };
+      const detail = messages[code] || 'Googleログインに失敗しました。';
+      renderGoogleLogin(`${detail} [エラーコード: ${code}]`);
+    }
+  });
+}
+
+function isAllowedUser(user){
+  return !!user && ALLOWED_EMAILS.includes((user.email || '').toLowerCase());
+}
+
+function authorName(){
+  if(!currentUser) return '不明';
+  return currentUser.displayName || currentUser.email || '不明';
+}
+
+function startRealtimeSync(){
+  if(unsubscribeBoard) unsubscribeBoard();
+  const statusEl=document.getElementById('syncStatus');
+  statusEl.textContent='同期中…';
+  unsubscribeBoard=onSnapshot(boardRef, snap=>{
+    if(snap.exists()){
+      const data=snap.data();
+      state={
+        projects:Array.isArray(data.projects)?data.projects:[],
+        tasks:Array.isArray(data.tasks)?data.tasks:[],
+        comments:Array.isArray(data.comments)?data.comments:[]
+      };
+    }else{
+      state={projects:[],tasks:[],comments:[]};
+    }
+    statusEl.textContent='同期済み '+new Date().toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
+    render();
+  }, err=>{
+    console.error(err);
+    statusEl.textContent='同期エラー';
+    showToast('Firestoreの読み込みに失敗しました。Security Rulesを確認してください。');
+  });
+}
+
+async function loadData(silent){
+  if(!authenticated) return;
+  const statusEl=document.getElementById('syncStatus');
+  if(!silent) statusEl.textContent='読み込み中…';
+  try{
+    const snap=await getDoc(boardRef);
+    if(snap.exists()){
+      const data=snap.data();
+      state={projects:Array.isArray(data.projects)?data.projects:[],tasks:Array.isArray(data.tasks)?data.tasks:[],comments:Array.isArray(data.comments)?data.comments:[]};
+    }else{
+      state={projects:[],tasks:[],comments:[]};
+    }
+    statusEl.textContent='最終更新: '+new Date().toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
+    render();
+  }catch(e){
+    console.error(e);
+    statusEl.textContent='読み込みエラー';
+    showToast('Firestoreから読み込めませんでした。');
+  }
+}
+
+async function saveData(silent=false){
+  if(!authenticated || !currentUser){ showToast('ログインが必要です'); return; }
+  try{
+    await setDoc(boardRef,{
+      projects:state.projects,
+      tasks:state.tasks,
+      comments:state.comments,
+      updatedAt:new Date().toISOString(),
+      updatedBy:currentUser.email || ''
+    });
+    document.getElementById('syncStatus').textContent='保存済み '+new Date().toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
+    if(!silent) showToast('保存しました');
+  }catch(e){
+    console.error(e);
+    showToast('保存に失敗しました。FirestoreのSecurity Rulesを確認してください。');
+  }
+}
+
+onAuthStateChanged(auth, async user=>{
+  if(!user){
+    authenticated=false; currentUser=null;
+    if(unsubscribeBoard){ unsubscribeBoard(); unsubscribeBoard=null; }
+    document.getElementById('userChip').textContent='';
+    renderGoogleLogin();
+    return;
+  }
+  if(!isAllowedUser(user)){
+    const email=user.email || 'このアカウント';
+    await signOut(auth);
+    renderGoogleLogin(`${email} はこのボードの許可アカウントではありません。`);
+    return;
+  }
+  currentUser=user; authenticated=true;
+  document.body.classList.remove('locked');
+  document.getElementById('userChip').textContent=user.displayName || user.email || '';
+  startRealtimeSync();
+});
+
+
+function currentEmail(){
+  return (currentUser?.email || '').toLowerCase();
+}
+
+function unreadComments(){
+  const email=currentEmail();
+  if(!email) return [];
+  return (state.comments || [])
+    .filter(c => (c.authorEmail || '').toLowerCase() !== email)
+    .filter(c => !Array.isArray(c.readBy) || !c.readBy.map(x=>String(x).toLowerCase()).includes(email))
+    .sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+}
+
+function updateNotificationBadge(){
+  const badge=document.getElementById('notifyBadge');
+  if(!badge) return;
+  const count=unreadComments().length;
+  badge.textContent=count > 99 ? '99+' : String(count);
+  badge.classList.toggle('show', count > 0);
+  const btn=document.getElementById('notifyBtn');
+  if(btn) btn.title=count ? `未読コメント ${count}件` : '未読コメントはありません';
+}
+
+function projectNameForComment(c){
+  return state.projects.find(p=>p.id===c.projectId)?.name || '削除された案件';
+}
+
+async function markProjectCommentsRead(projectId, silent=true){
+  const email=currentEmail();
+  if(!email) return false;
+  let changed=false;
+  (state.comments || []).forEach(c=>{
+    if(c.projectId !== projectId) return;
+    if((c.authorEmail || '').toLowerCase() === email) return;
+    const readBy=Array.isArray(c.readBy) ? [...c.readBy] : [];
+    if(!readBy.map(x=>String(x).toLowerCase()).includes(email)){
+      readBy.push(email);
+      c.readBy=readBy;
+      changed=true;
+    }
+  });
+  updateNotificationBadge();
+  if(changed) await saveData(silent);
+  return changed;
+}
+
+async function markAllCommentsRead(){
+  const email=currentEmail();
+  if(!email) return;
+  let changed=false;
+  (state.comments || []).forEach(c=>{
+    if((c.authorEmail || '').toLowerCase() === email) return;
+    const readBy=Array.isArray(c.readBy) ? [...c.readBy] : [];
+    if(!readBy.map(x=>String(x).toLowerCase()).includes(email)){
+      readBy.push(email); c.readBy=readBy; changed=true;
+    }
+  });
+  if(changed) await saveData(true);
+  closeModal();
+  updateNotificationBadge();
+  showToast('すべて既読にしました');
+}
+
+function openNotifications(){
+  const items=unreadComments();
+  openModal(`
+    <h3>通知 ${items.length ? `（未読 ${items.length}件）` : ''}</h3>
+    ${items.length ? `<div class="notification-tools"><button class="btn" id="markAllReadBtn">すべて既読</button></div>` : ''}
+    ${items.length ? `<div class="notification-list">${items.map(c=>`
+      <button class="notification-item" data-notify-project="${escapeAttr(c.projectId)}">
+        <div class="notification-project">${escapeHtml(projectNameForComment(c))}</div>
+        <div class="notification-meta">${escapeHtml(c.author || c.authorEmail || '投稿者')} ・ ${fmtDateTime(c.createdAt)}</div>
+        <div class="notification-text">${escapeHtml(c.text || '')}</div>
+      </button>`).join('')}</div>` : '<div class="notification-empty">未読コメントはありません。</div>'}
+    <div class="modal-actions"><div></div><div class="right"><button class="btn" id="closeNotifications">閉じる</button></div></div>
+  `);
+  document.getElementById('closeNotifications').addEventListener('click', closeModal);
+  const all=document.getElementById('markAllReadBtn');
+  if(all) all.addEventListener('click', markAllCommentsRead);
+  document.querySelectorAll('[data-notify-project]').forEach(btn=>btn.addEventListener('click', async()=>{
+    const projectId=btn.dataset.notifyProject;
+    selectedProjectId=projectId;
+    closeModal();
+    await markProjectCommentsRead(projectId, true);
+    render();
+  }));
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(()=> t.classList.remove('show'), 2200);
+}
+
+function projectUrgency(p){
+  if(p.status === '完了') return 'grey';
+  const du = daysUntil(p.deadline);
+  if(du === null) return 'teal';
+  if(du < 0) return 'brick';
+  if(du <= 3) return 'amber';
+  return 'teal';
+}
+function urgencyLabel(p){
+  if(p.status === '完了') return '完了';
+  const du = daysUntil(p.deadline);
+  if(du === null) return '納期未設定';
+  if(du < 0) return `納期超過 ${Math.abs(du)}日`;
+  if(du === 0) return '本日締切';
+  return `あと${du}日`;
+}
+
+function tasksFor(projectId){
+  return state.tasks.filter(t => t.projectId === projectId);
+}
+
+function commentsFor(projectId){
+  return (state.comments || []).filter(c => c.projectId === projectId).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+}
+
+function fmtDateTime(d){
+  if(!d) return '';
+  const dt = new Date(d);
+  if(isNaN(dt)) return '';
+  return dt.toLocaleString('ja-JP', {year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit'});
+}
+
+function getFilteredSortedProjects(){
+  let list = state.projects.filter(p => {
+    if(statusFilter !== 'all' && p.status !== statusFilter) return false;
+    if(searchQuery && !(p.name + ' ' + (p.client||'')).toLowerCase().includes(searchQuery.toLowerCase())) return false;
+    return true;
+  });
+  if(sortMode === 'name'){
+    list.sort((a,b) => a.name.localeCompare(b.name, 'ja'));
+  } else if(sortMode === 'deadline'){
+    list.sort((a,b) => {
+      if(!a.deadline && !b.deadline) return 0;
+      if(!a.deadline) return 1;
+      if(!b.deadline) return -1;
+      return new Date(a.deadline) - new Date(b.deadline);
+    });
+  } else {
+    list.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+  }
+  return list;
+}
+
+function render(){
+  const root = document.getElementById('root');
+  const list = getFilteredSortedProjects();
+  const selected = state.projects.find(p => p.id === selectedProjectId) || null;
+
+  root.innerHTML = `
+    <div class="layout">
+      <div class="panel">
+        <div class="sidebar-head">
+          <div class="search-row">
+            <input type="text" id="searchInput" placeholder="案件名・相手名で検索" value="${escapeAttr(searchQuery)}">
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <select id="statusFilterSelect">
+              <option value="all" ${statusFilter==='all'?'selected':''}>すべてのステータス</option>
+              <option value="進行中" ${statusFilter==='進行中'?'selected':''}>進行中</option>
+              <option value="保留" ${statusFilter==='保留'?'selected':''}>保留</option>
+              <option value="完了" ${statusFilter==='完了'?'selected':''}>完了</option>
+            </select>
+          </div>
+        </div>
+        <div class="tabs">
+          <button class="tab ${sortMode==='name'?'active':''}" data-sort="name">案件名順</button>
+          <button class="tab ${sortMode==='deadline'?'active':''}" data-sort="deadline">納期順</button>
+          <button class="tab ${sortMode==='created'?'active':''}" data-sort="created">作成日順</button>
+        </div>
+        <ul class="project-list">
+          ${list.length ? list.map(p => renderProjectCard(p)).join('') : `<div class="empty-note">${state.projects.length ? '条件に一致する案件がありません。' : 'まだ案件がありません。右上の「＋ 新規案件」から追加しましょう。'}</div>`}
+        </ul>
+      </div>
+
+      <div class="panel detail">
+        ${selected ? renderDetail(selected) : `<div class="detail-empty"><h3>案件を選択してください</h3><p>左の一覧から案件を選ぶと、スケジュールとタスクが表示されます。</p></div>`}
+      </div>
+    </div>
+  `;
+
+  attachListEvents();
+  if(selected) attachDetailEvents(selected);
+  updateNotificationBadge();
+}
+
+function renderProjectCard(p){
+  const urg = projectUrgency(p);
+  const ts = tasksFor(p.id);
+  const done = ts.filter(t => t.status === '完了').length;
+  const pct = ts.length ? Math.round(done / ts.length * 100) : 0;
+  return `
+    <li class="project-card ${p.id===selectedProjectId?'selected':''}" data-id="${p.id}">
+      <div class="pc-top">
+        <div>
+          <div class="pc-name">${escapeHtml(p.name)}</div>
+          ${p.client ? `<div class="pc-client">${escapeHtml(p.client)}</div>` : ''}
+        </div>
+        <span class="badge ${urg}">${urgencyLabel(p)}</span>
+      </div>
+      <div class="pc-meta">
+        <span>納期 ${fmtDate(p.deadline)}</span>
+        <span>作成 ${fmtDate(p.createdAt)}</span>
+      </div>
+      ${ts.length ? `<div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>` : ''}
+    </li>
+  `;
+}
+
+function displayValue(v, fallback='未設定'){ return (v === 0 || String(v || '').trim()) ? escapeHtml(v) : `<span class="muted">${fallback}</span>`; }
+function yen(v){
+  if(v === '' || v === null || v === undefined) return '<span class="muted">未設定</span>';
+  const n = Number(v); return Number.isFinite(n) ? '¥' + n.toLocaleString('ja-JP') : escapeHtml(v);
+}
+function renderOpsInfo(p){
+  const materials = [['ロゴ',p.materialLogo],['原稿',p.materialCopy],['写真',p.materialPhoto],['フォント',p.materialFont],['その他素材',p.materialOther]];
+  const approvals = [['デザイン確認',p.approvalDesign],['デザイン承認',p.approvalDesignFinal],['コーディング確認',p.approvalCoding],['最終確認',p.approvalFinal],['公開承認',p.approvalPublish]];
+  return `
+    <section class="info-section"><h3>制作仕様</h3><div class="info-grid cols3">
+      <div class="info-item"><div class="info-label">制作ページ数</div><div class="info-value">${displayValue(p.pageCount)}</div></div>
+      <div class="info-item"><div class="info-label">CMS</div><div class="info-value">${displayValue(p.cms)}</div></div>
+      <div class="info-item"><div class="info-label">レスポンシブ</div><div class="info-value">${displayValue(p.responsive)}</div></div>
+      <div class="info-item"><div class="info-label">フォーム</div><div class="info-value">${displayValue(p.hasForm)}</div></div>
+      <div class="info-item"><div class="info-label">アニメーション</div><div class="info-value">${displayValue(p.hasAnimation)}</div></div>
+      <div class="info-item"><div class="info-label">その他仕様</div><div class="info-value">${displayValue(p.specNote)}</div></div>
+    </div></section>
+    <section class="info-section"><h3>担当</h3><div class="info-grid cols3">
+      <div class="info-item"><div class="info-label">デザイン担当</div><div class="info-value">${displayValue(p.designOwner)}</div></div>
+      <div class="info-item"><div class="info-label">コーディング担当</div><div class="info-value">${displayValue(p.codingOwner)}</div></div>
+      <div class="info-item"><div class="info-label">クライアント確認担当</div><div class="info-value">${displayValue(p.clientOwner)}</div></div>
+    </div></section>
+    <section class="info-section"><h3>素材状況</h3><div class="info-grid cols3">
+      ${materials.map(([l,v])=>`<div class="info-item"><div class="info-label">${l}</div><div class="info-value"><span class="status-mini">${displayValue(v)}</span></div></div>`).join('')}
+    </div></section>
+    <section class="info-section"><h3>確認・承認</h3><div class="info-grid cols3">
+      ${approvals.map(([l,v])=>`<div class="info-item"><div class="info-label">${l}</div><div class="info-value"><span class="status-mini">${displayValue(v)}</span></div></div>`).join('')}
+    </div></section>
+    <section class="info-section"><h3>費用</h3><div class="info-grid cols3">
+      <div class="info-item"><div class="info-label">案件金額</div><div class="info-value">${yen(p.projectFee)}</div></div>
+      <div class="info-item"><div class="info-label">デザイン費</div><div class="info-value">${yen(p.designFee)}</div></div>
+      <div class="info-item"><div class="info-label">コーディング費</div><div class="info-value">${yen(p.codingFee)}</div></div>
+      <div class="info-item"><div class="info-label">その他費用</div><div class="info-value">${yen(p.otherFee)}</div></div>
+      <div class="info-item"><div class="info-label">請求状況</div><div class="info-value">${displayValue(p.invoiceStatus)}</div></div>
+      <div class="info-item"><div class="info-label">入金状況</div><div class="info-value">${displayValue(p.paymentStatus)}</div></div>
+    </div></section>
+    <section class="info-section"><h3>公開・納品</h3><div class="info-grid cols3">
+      <div class="info-item"><div class="info-label">公開予定日</div><div class="info-value">${p.publishPlanDate ? fmtDate(p.publishPlanDate) : '<span class="muted">未設定</span>'}</div></div>
+      <div class="info-item"><div class="info-label">公開日</div><div class="info-value">${p.publishDate ? fmtDate(p.publishDate) : '<span class="muted">未設定</span>'}</div></div>
+      <div class="info-item"><div class="info-label">納品状況</div><div class="info-value">${displayValue(p.deliveryStatus)}</div></div>
+      <div class="info-item"><div class="info-label">請求</div><div class="info-value">${displayValue(p.invoiceStatus)}</div></div>
+      <div class="info-item"><div class="info-label">入金</div><div class="info-value">${displayValue(p.paymentStatus)}</div></div>
+    </div></section>`;
+}
+
+function renderDetail(p){
+  const ts = tasksFor(p.id).sort((a,b) => {
+    if(!a.deadline && !b.deadline) return 0;
+    if(!a.deadline) return 1;
+    if(!b.deadline) return -1;
+    return new Date(a.deadline) - new Date(b.deadline);
+  });
+
+  return `
+    <div class="detail-head">
+      <div>
+        <h2>${escapeHtml(p.name)}</h2>
+        <div class="detail-sub">${p.client ? escapeHtml(p.client) + ' ・ ' : ''}ステータス: <span class="badge ${projectStatusBadge(p.status)}">${escapeHtml(p.status)}</span> ・ 納期: ${fmtDate(p.deadline)} ・ 作成日: ${fmtDate(p.createdAt)}</div>
+        ${p.memo ? `<div class="detail-memo">${escapeHtml(p.memo)}</div>` : ''}
+      </div>
+      <div class="detail-actions">
+        <button class="btn icon" id="editProjectBtn">編集</button>
+        <button class="btn icon" id="deleteProjectBtn">削除</button>
+      </div>
+    </div>
+
+    ${renderProjectLinks(p)}
+    ${renderOpsInfo(p)}
+    ${renderRuler(p, ts)}
+
+    <div class="section-title">
+      <h3>タスク（${ts.length}）</h3>
+      <button class="btn" id="addTaskBtn">＋ タスク追加</button>
+    </div>
+    ${ts.length ? `
+    <table class="tasks">
+      <thead><tr><th>タスク</th><th>期限</th><th>担当</th><th>状態</th><th></th></tr></thead>
+      <tbody>
+        ${ts.map(t => `
+          <tr data-id="${t.id}">
+            <td class="task-name">${escapeHtml(t.title)}</td>
+            <td>${fmtDate(t.deadline)}</td>
+            <td>${escapeHtml(t.assignee || '-')}</td>
+            <td><span class="badge ${taskBadgeColor(t)}">${t.status}</span></td>
+            <td><div class="row-actions">
+              <button data-action="edit-task" data-id="${t.id}">編集</button>
+              <button data-action="delete-task" data-id="${t.id}">削除</button>
+            </div></td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>` : `<div class="empty-note">タスクがまだありません。「＋ タスク追加」から登録しましょう。</div>`}
+
+    ${renderComments(p.id)}
+  `;
+}
+
+function safeHref(url){
+  const raw = String(url || '').trim();
+  if(!raw) return '';
+  const candidate = /^https?:\/\//i.test(raw) ? raw : 'https://' + raw;
+  try{
+    const u = new URL(candidate);
+    return (u.protocol === 'http:' || u.protocol === 'https:') ? u.href : '';
+  }catch(e){ return ''; }
+}
+
+function linkItem(url, label){
+  const href = safeHref(url);
+  if(!href) return '';
+  return `<a class="project-link" href="${escapeAttr(href)}" target="_blank" rel="noopener noreferrer" title="${escapeAttr(href)}"><span>${escapeHtml(label)}</span></a>`;
+}
+
+function renderProjectLinks(p){
+  const old = linkItem(p.oldSite, '旧サイト');
+  const testSite = linkItem(p.testSite, 'テストサイト');
+  const liveSite = linkItem(p.liveSite, '本番サイト');
+  const shared = [p.sharedLink1,p.sharedLink2,p.sharedLink3].map((u,i)=>linkItem(u, `共有リンク ${i+1}`)).filter(Boolean).join('');
+  const refs = [p.referenceLink1,p.referenceLink2,p.referenceLink3].map((u,i)=>linkItem(u, `参考サイト ${i+1}`)).filter(Boolean).join('');
+  if(!old && !testSite && !liveSite && !shared && !refs) return '';
+  return `
+    <section class="project-links">
+      <h3 class="project-links-title">関連リンク</h3>
+      <div class="link-groups">
+        <div class="link-group"><div class="link-group-label">サイト</div>${old}${testSite}${liveSite}${(!old&&!testSite&&!liveSite) ? '<div class="link-empty">未登録</div>' : ''}</div>
+        <div class="link-group"><div class="link-group-label">共有リンク</div>${shared || '<div class="link-empty">未登録</div>'}</div>
+        <div class="link-group"><div class="link-group-label">参考サイト</div>${refs || '<div class="link-empty">未登録</div>'}</div>
+      </div>
+    </section>`;
+}
+
+function renderComments(projectId){
+  const comments = commentsFor(projectId);
+  return `
+    <div class="comments-section">
+      <div class="section-title">
+        <h3>コメント履歴（${comments.length}）</h3>
+      </div>
+      <div class="comment-form">
+        <div class="field">
+          <label>追加コメント</label>
+          <textarea id="commentText" rows="3" placeholder="後から追加された内容や共有事項を入力"></textarea>
+        </div>
+        <div class="field" style="flex:0 0 190px;">
+          <label>投稿者</label>
+          <div class="comment-login-user">${escapeHtml(authorName())}</div>
+        </div>
+        <button class="btn primary" id="addCommentBtn">追加</button>
+      </div>
+      ${comments.length ? `<div class="comment-list">${comments.map(c => `
+        <div class="comment-item" data-comment-id="${c.id}">
+          <div class="comment-head">
+            <span class="comment-author">${escapeHtml(c.author || '投稿者未設定')}</span>
+            <span class="comment-meta">${fmtDateTime(c.createdAt)}</span>
+          </div>
+          <div class="comment-text">${escapeHtml(c.text)}</div>
+          <div class="comment-actions"><button data-action="delete-comment" data-id="${c.id}">削除</button></div>
+        </div>`).join('')}</div>` : `<div class="empty-note">コメントはまだありません。</div>`}
+    </div>
+  `;
+}
+
+function projectStatusBadge(status){
+  if(status === '完了') return 'status-done';
+  if(status === '保留') return 'status-hold';
+  return 'status-progress';
+}
+
+function taskBadgeColor(t){
+  if(t.status === '完了') return 'status-done';
+  if(t.status === '進行中') return 'status-progress';
+  if(t.status === '未着手') return 'status-todo';
+  if(t.status === '保留') return 'status-hold';
+  return 'status-todo';
+}
+
+function renderRuler(p, ts){
+  const start = new Date(p.createdAt || todayStr());
+  let end = p.deadline ? new Date(p.deadline) : null;
+  if(!end || isNaN(end)){
+    const taskDates = ts.filter(t => t.deadline).map(t => new Date(t.deadline)).filter(d => !isNaN(d));
+    end = taskDates.length ? new Date(Math.max(...taskDates.map(d => d.getTime()))) : new Date(start.getTime() + 14 * 86400000);
+  }
+  if(end <= start) end = new Date(start.getTime() + 86400000);
+
+  const range = end - start;
+  const pos = d => ((d - start) / range) * 100;
+  const today = new Date(todayStr());
+  const showToday = today >= start && today <= end;
+  const todayPos = Math.max(0, Math.min(100, pos(today)));
+  const todayLabelClass = todayPos <= 10 ? 'near-start' : (todayPos >= 90 ? 'near-end' : '');
+
+  const totalDays = Math.max(1, Math.round(range / 86400000));
+  const weeks = Math.max(1, Math.ceil(totalDays / 7));
+  const ticks = [];
+  for(let i = 1; i < weeks; i++){
+    const d = new Date(start.getTime() + i * 7 * 86400000);
+    if(d >= end) break;
+    const p_ = pos(d);
+    const label = `${d.getMonth()+1}/${d.getDate()}`;
+    ticks.push(`<span class="timeline-tick" style="left:${p_}%"></span><span class="timeline-tick-label" style="left:${p_}%">${label}</span>`);
+  }
+
+  return `
+    <section class="schedule-card">
+      <h3 class="schedule-title">スケジュール</h3>
+      <div class="timeline">
+        <div class="timeline-end start"><strong>開始日</strong>${fmtDate(start)}</div>
+        <div class="timeline-end end"><strong>納期</strong>${p.deadline ? fmtDate(p.deadline) : fmtDate(end)}</div>
+        ${showToday ? `<div class="timeline-today" style="left:${todayPos}%"></div><div class="timeline-today-label ${todayLabelClass}" style="left:${todayPos}%">今日<span>${fmtDate(today)}</span></div>` : ''}
+        <div class="timeline-line"></div>
+        <span class="timeline-start-dot"></span>
+        <span class="timeline-end-dot"></span>
+        ${ticks.join('')}
+        <div class="timeline-period">期間：約${weeks}週間</div>
+      </div>
+    </section>
+  `;
+}
+
+function escapeHtml(s){
+  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function escapeAttr(s){ return escapeHtml(s); }
+
+function attachListEvents(){
+  document.getElementById('searchInput').addEventListener('input', e => { searchQuery = e.target.value; render(); document.getElementById('searchInput').focus(); document.getElementById('searchInput').selectionStart = document.getElementById('searchInput').value.length; });
+  document.getElementById('statusFilterSelect').addEventListener('change', e => { statusFilter = e.target.value; render(); });
+  document.querySelectorAll('.tab').forEach(btn => btn.addEventListener('click', () => { sortMode = btn.dataset.sort; render(); }));
+  document.querySelectorAll('.project-card').forEach(card => card.addEventListener('click', async () => { selectedProjectId = card.dataset.id; await markProjectCommentsRead(selectedProjectId, true); render(); }));
+}
+
+function attachDetailEvents(p){
+  document.getElementById('editProjectBtn').addEventListener('click', () => openProjectModal(p));
+  document.getElementById('deleteProjectBtn').addEventListener('click', () => deleteProject(p));
+  document.getElementById('addTaskBtn').addEventListener('click', () => openTaskModal(p.id));
+  document.querySelectorAll('[data-action="edit-task"]').forEach(b => b.addEventListener('click', () => {
+    const task = state.tasks.find(t => t.id === b.dataset.id);
+    openTaskModal(p.id, task);
+  }));
+  document.querySelectorAll('[data-action="delete-task"]').forEach(b => b.addEventListener('click', () => {
+    deleteTask(b.dataset.id);
+  }));
+  const addCommentBtn = document.getElementById('addCommentBtn');
+  if(addCommentBtn) addCommentBtn.addEventListener('click', () => addComment(p.id));
+  document.querySelectorAll('[data-action="delete-comment"]').forEach(b => b.addEventListener('click', () => deleteComment(b.dataset.id)));
+}
+
+document.getElementById('newProjectBtn').addEventListener('click', () => openProjectModal(null));
+document.getElementById('refreshBtn').addEventListener('click', () => loadData(false));
+document.getElementById('notifyBtn').addEventListener('click', openNotifications);
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+  try{ await signOut(auth); }catch(e){ console.error(e); showToast('ログアウトに失敗しました'); }
+});
+
+// ---- Modals ----
+function openModal(html){
+  modalOpen = true;
+  const overlay = document.createElement('div');
+  overlay.className = 'overlay';
+  overlay.id = 'overlay';
+  overlay.innerHTML = `<div class="modal">${html}</div>`;
+  overlay.addEventListener('click', e => { if(e.target === overlay) closeModal(); });
+  document.body.appendChild(overlay);
+}
+function closeModal(){
+  modalOpen = false;
+  const overlay = document.getElementById('overlay');
+  if(overlay) overlay.remove();
+}
+
+function optionSet(value, options){
+  return options.map(o=>`<option value="${escapeAttr(o)}" ${value===o?'selected':''}>${escapeHtml(o)}</option>`).join('');
+}
+function openProjectModal(p){
+  const isEdit = !!p;
+  const materialOpts=['未受領','一部受領','受領済み','不要'];
+  const approvalOpts=['未確認','確認中','修正中','OK','不要'];
+  openModal(`
+    <h3>${isEdit ? '案件を編集' : '新規案件'}</h3>
+    <div class="field"><label>案件名 *</label><input type="text" id="f-name" value="${escapeAttr(p?.name || '')}"></div>
+    <div class="field"><label>相手・クライアント名</label><input type="text" id="f-client" value="${escapeAttr(p?.client || '')}"></div>
+    <div class="field-row">
+      <div class="field"><label>納期</label><input type="date" id="f-deadline" value="${p?.deadline || ''}"></div>
+      <div class="field"><label>公開予定日</label><input type="date" id="f-publishPlanDate" value="${p?.publishPlanDate || ''}"></div>
+    </div>
+    <div class="field"><label>ステータス</label><select id="f-status">${optionSet(p?.status || '進行中',['進行中','保留','完了'])}</select></div>
+    <div class="field"><label>メモ</label><textarea id="f-memo" rows="4">${escapeHtml(p?.memo || '')}</textarea></div>
+
+    <div class="modal-section"><h4>関連リンク</h4>
+      <div class="field"><label>旧サイト URL</label><input type="text" id="f-oldSite" value="${escapeAttr(p?.oldSite || '')}"></div>
+      <div class="field"><label>テストサイト URL</label><input type="text" id="f-testSite" value="${escapeAttr(p?.testSite || '')}"></div>
+      <div class="field"><label>本番サイト URL</label><input type="text" id="f-liveSite" value="${escapeAttr(p?.liveSite || '')}"></div>
+      <div class="field"><label>共有リンク（最大3件）</label><div class="link-fields">
+        <input type="text" id="f-shared1" value="${escapeAttr(p?.sharedLink1 || '')}" placeholder="Figma / Drive など">
+        <input type="text" id="f-shared2" value="${escapeAttr(p?.sharedLink2 || '')}">
+        <input type="text" id="f-shared3" value="${escapeAttr(p?.sharedLink3 || '')}">
+      </div></div>
+      <div class="field"><label>参考サイト（最大3件）</label><div class="link-fields">
+        <input type="text" id="f-reference1" value="${escapeAttr(p?.referenceLink1 || '')}">
+        <input type="text" id="f-reference2" value="${escapeAttr(p?.referenceLink2 || '')}">
+        <input type="text" id="f-reference3" value="${escapeAttr(p?.referenceLink3 || '')}">
+      </div></div>
+    </div>
+
+    <div class="modal-section"><h4>制作仕様</h4>
+      <div class="field-row"><div class="field"><label>制作ページ数</label><input type="number" id="f-pageCount" min="0" value="${escapeAttr(p?.pageCount ?? '')}"></div>
+      <div class="field"><label>CMS</label><input type="text" id="f-cms" value="${escapeAttr(p?.cms || '')}" placeholder="WordPress / なし"></div></div>
+      <div class="field-row"><div class="field"><label>レスポンシブ対応</label><select id="f-responsive">${optionSet(p?.responsive || 'PC / Tablet / SP',['PC / Tablet / SP','PC / SP','PCのみ','その他'])}</select></div>
+      <div class="field"><label>フォーム</label><select id="f-hasForm">${optionSet(p?.hasForm || 'なし',['なし','あり','未定'])}</select></div></div>
+      <div class="field"><label>アニメーション</label><select id="f-hasAnimation">${optionSet(p?.hasAnimation || 'なし',['なし','あり','未定'])}</select></div>
+      <div class="field"><label>その他仕様</label><textarea id="f-specNote" rows="2">${escapeHtml(p?.specNote || '')}</textarea></div>
+    </div>
+
+    <div class="modal-section"><h4>担当</h4><div class="field-row">
+      <div class="field"><label>デザイン担当</label><input type="text" id="f-designOwner" value="${escapeAttr(p?.designOwner || '')}"></div>
+      <div class="field"><label>コーディング担当</label><input type="text" id="f-codingOwner" value="${escapeAttr(p?.codingOwner || '')}"></div>
+    </div><div class="field"><label>クライアント確認担当</label><input type="text" id="f-clientOwner" value="${escapeAttr(p?.clientOwner || '')}"></div></div>
+
+    <div class="modal-section"><h4>素材状況</h4>
+      ${[['Logo','ロゴ'],['Copy','原稿'],['Photo','写真'],['Font','フォント'],['Other','その他素材']].map(([id,l])=>`<div class="field"><label>${l}</label><select id="f-material${id}">${optionSet(p?.['material'+id] || '未受領',materialOpts)}</select></div>`).join('')}
+    </div>
+
+    <div class="modal-section"><h4>確認・承認</h4>
+      ${[['Design','デザイン確認'],['DesignFinal','デザイン承認'],['Coding','コーディング確認'],['Final','最終確認'],['Publish','公開承認']].map(([id,l])=>`<div class="field"><label>${l}</label><select id="f-approval${id}">${optionSet(p?.['approval'+id] || '未確認',approvalOpts)}</select></div>`).join('')}
+    </div>
+
+    <div class="modal-section"><h4>費用</h4>
+      <div class="field-row"><div class="field"><label>案件金額（円）</label><input type="number" min="0" id="f-projectFee" value="${escapeAttr(p?.projectFee ?? '')}"></div>
+      <div class="field"><label>デザイン費（円）</label><input type="number" min="0" id="f-designFee" value="${escapeAttr(p?.designFee ?? '')}"></div></div>
+      <div class="field-row"><div class="field"><label>コーディング費（円）</label><input type="number" min="0" id="f-codingFee" value="${escapeAttr(p?.codingFee ?? '')}"></div>
+      <div class="field"><label>その他費用（円）</label><input type="number" min="0" id="f-otherFee" value="${escapeAttr(p?.otherFee ?? '')}"></div></div>
+      <div class="field-row"><div class="field"><label>請求状況</label><select id="f-invoiceStatus">${optionSet(p?.invoiceStatus || '未請求',['未請求','請求予定','請求済み','不要'])}</select></div>
+      <div class="field"><label>入金状況</label><select id="f-paymentStatus">${optionSet(p?.paymentStatus || '未入金',['未入金','一部入金','入金済み','不要'])}</select></div></div>
+    </div>
+
+    <div class="modal-section"><h4>公開・納品</h4>
+      <div class="field-row"><div class="field"><label>公開日</label><input type="date" id="f-publishDate" value="${p?.publishDate || ''}"></div>
+      <div class="field"><label>納品状況</label><select id="f-deliveryStatus">${optionSet(p?.deliveryStatus || '未納品',['未納品','納品準備中','納品済み','不要'])}</select></div></div>
+    </div>
+
+    <div class="modal-actions">
+      <div>${isEdit ? '<button class="danger-link" id="deleteFromModal">この案件を削除</button>' : ''}</div>
+      <div class="right"><button class="btn" id="cancelModal">キャンセル</button><button class="btn primary" id="saveProject">保存</button></div>
+    </div>
+  `);
+  document.getElementById('cancelModal').addEventListener('click', closeModal);
+  if(isEdit) document.getElementById('deleteFromModal').addEventListener('click', () => { closeModal(); deleteProject(p); });
+  document.getElementById('saveProject').addEventListener('click', async () => {
+    const val=id=>document.getElementById(id).value.trim();
+    const name=val('f-name'); if(!name){showToast('案件名を入力してください');return;}
+    const data={
+      name, client:val('f-client'), deadline:val('f-deadline'), publishPlanDate:val('f-publishPlanDate'),
+      status:val('f-status'), memo:val('f-memo'), oldSite:val('f-oldSite'), testSite:val('f-testSite'), liveSite:val('f-liveSite'),
+      sharedLink1:val('f-shared1'),sharedLink2:val('f-shared2'),sharedLink3:val('f-shared3'),
+      referenceLink1:val('f-reference1'),referenceLink2:val('f-reference2'),referenceLink3:val('f-reference3'),
+      pageCount:val('f-pageCount'),cms:val('f-cms'),responsive:val('f-responsive'),hasForm:val('f-hasForm'),hasAnimation:val('f-hasAnimation'),specNote:val('f-specNote'),
+      designOwner:val('f-designOwner'),codingOwner:val('f-codingOwner'),clientOwner:val('f-clientOwner'),
+      materialLogo:val('f-materialLogo'),materialCopy:val('f-materialCopy'),materialPhoto:val('f-materialPhoto'),materialFont:val('f-materialFont'),materialOther:val('f-materialOther'),
+      approvalDesign:val('f-approvalDesign'),approvalDesignFinal:val('f-approvalDesignFinal'),approvalCoding:val('f-approvalCoding'),approvalFinal:val('f-approvalFinal'),approvalPublish:val('f-approvalPublish'),
+      projectFee:val('f-projectFee'),designFee:val('f-designFee'),codingFee:val('f-codingFee'),otherFee:val('f-otherFee'),
+      invoiceStatus:val('f-invoiceStatus'),paymentStatus:val('f-paymentStatus'),publishDate:val('f-publishDate'),deliveryStatus:val('f-deliveryStatus')
+    };
+    if(isEdit) Object.assign(p,data); else { const newP={id:uid(),createdAt:todayStr(),...data}; state.projects.push(newP); selectedProjectId=newP.id; }
+    closeModal(); render(); await saveData();
+  });
+}
+
+async function deleteProject(p){
+  if(!confirm(`「${p.name}」を削除します。関連するタスクもすべて削除されます。よろしいですか？`)) return;
+  state.projects = state.projects.filter(x => x.id !== p.id);
+  state.tasks = state.tasks.filter(t => t.projectId !== p.id);
+  state.comments = (state.comments || []).filter(c => c.projectId !== p.id);
+  if(selectedProjectId === p.id) selectedProjectId = null;
+  render();
+  await saveData();
+}
+
+function openTaskModal(projectId, t){
+  const isEdit = !!t;
+  openModal(`
+    <h3>${isEdit ? 'タスクを編集' : 'タスク追加'}</h3>
+    <div class="field"><label>タスク名 *</label><input type="text" id="t-title" value="${escapeAttr(t?.title || '')}" placeholder="例: 初稿提出"></div>
+    <div class="field"><label>期限</label><input type="date" id="t-deadline" value="${t?.deadline || ''}"></div>
+    <div class="field"><label>担当</label><input type="text" id="t-assignee" value="${escapeAttr(t?.assignee || '')}" placeholder="例: 自分 / デザイナー名"></div>
+    <div class="field"><label>状態</label>
+      <select id="t-status">
+        <option value="未着手" ${(!t||t.status==='未着手')?'selected':''}>未着手</option>
+        <option value="進行中" ${t?.status==='進行中'?'selected':''}>進行中</option>
+        <option value="完了" ${t?.status==='完了'?'selected':''}>完了</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <div>${isEdit ? '<button class="danger-link" id="deleteTaskFromModal">削除</button>' : ''}</div>
+      <div class="right">
+        <button class="btn" id="cancelModal">キャンセル</button>
+        <button class="btn primary" id="saveTask">保存</button>
+      </div>
+    </div>
+  `);
+  document.getElementById('cancelModal').addEventListener('click', closeModal);
+  if(isEdit) document.getElementById('deleteTaskFromModal').addEventListener('click', () => { closeModal(); deleteTask(t.id); });
+  document.getElementById('saveTask').addEventListener('click', async () => {
+    const title = document.getElementById('t-title').value.trim();
+    if(!title){ showToast('タスク名を入力してください'); return; }
+    const data = {
+      title,
+      deadline: document.getElementById('t-deadline').value,
+      assignee: document.getElementById('t-assignee').value.trim(),
+      status: document.getElementById('t-status').value,
+    };
+    if(isEdit){
+      Object.assign(t, data);
+    } else {
+      state.tasks.push({ id: uid(), projectId, createdAt: todayStr(), ...data });
+    }
+    closeModal();
+    render();
+    await saveData();
+  });
+}
+
+async function deleteTask(taskId){
+  if(!confirm('このタスクを削除しますか？')) return;
+  state.tasks = state.tasks.filter(t => t.id !== taskId);
+  render();
+  await saveData();
+}
+
+async function addComment(projectId){
+  const textEl = document.getElementById('commentText');
+  const text = textEl ? textEl.value.trim() : '';
+  if(!text){ showToast('コメントを入力してください'); return; }
+  if(!currentUser){ showToast('Googleログインが必要です'); return; }
+  state.comments = Array.isArray(state.comments) ? state.comments : [];
+  state.comments.push({
+    id: uid(),
+    projectId,
+    text,
+    author: authorName(),
+    authorEmail: currentUser.email || '',
+    createdAt: new Date().toISOString(),
+    readBy: [currentUser.email || '']
+  });
+  render();
+  await saveData();
+}
+
+async function deleteComment(commentId){
+  if(!confirm('このコメントを削除しますか？')) return;
+  state.comments = (state.comments || []).filter(c => c.id !== commentId);
+  render();
+  await saveData();
+}
+
+// Authentication state observer above starts the app. Firestore onSnapshot keeps both users in sync.
+</script>
+</body>
+</html>
