@@ -21,6 +21,15 @@
     --brick-soft:#FBE7EB;
     --grey:#9D9296;
     --grey-soft:#F3EFF0;
+    /* status colors */
+    --status-todo:#74686D;
+    --status-todo-bg:#F0ECEE;
+    --status-progress:#7C2440;
+    --status-progress-bg:#F5E8EC;
+    --status-done:#416A5A;
+    --status-done-bg:#E8F0EC;
+    --status-hold:#8A673F;
+    --status-hold-bg:#F4EDE3;
     --cherry:#6B1530;
     --cherry-dark:#2A0B15;
     --cherry-mid:#8A2744;
@@ -108,6 +117,10 @@
   .badge.amber{background:var(--amber-soft); color:var(--amber);}
   .badge.brick{background:var(--brick-soft); color:var(--brick);}
   .badge.grey{background:var(--grey-soft); color:var(--ink-soft);}
+  .badge.status-todo{background:var(--status-todo-bg); color:var(--status-todo); border:1px solid #DED5D9;}
+  .badge.status-progress{background:var(--status-progress-bg); color:var(--status-progress); border:1px solid #E6CCD4;}
+  .badge.status-done{background:var(--status-done-bg); color:var(--status-done); border:1px solid #CFDFD7;}
+  .badge.status-hold{background:var(--status-hold-bg); color:var(--status-hold); border:1px solid #E5D7C3;}
   .pc-meta{display:flex; justify-content:space-between; align-items:center; margin-top:8px; font-size:11.5px; color:var(--ink-soft); font-family:var(--font-mono);}
   .progress-track{height:4px; background:var(--grey-soft); border-radius:2px; margin-top:8px; overflow:hidden;}
   .progress-fill{height:100%; background:var(--teal);}
@@ -259,6 +272,37 @@
   input[type=number]{font-family:var(--font-body);font-size:13px;color:var(--ink);border:1.5px solid var(--line);border-radius:8px;padding:8px 10px;background:#fff;width:100%;}
   @media(max-width:700px){.info-grid,.info-grid.cols3,.field-row{grid-template-columns:1fr;}}
 
+
+  /* --- In-board notifications --- */
+  .notify-btn{position:relative;}
+  .notify-badge{
+    position:absolute; top:-6px; right:-6px; min-width:19px; height:19px;
+    padding:0 5px; border-radius:999px; background:#1B2430; color:#fff;
+    border:2px solid #F5EEED; font:600 10px/15px var(--font-mono);
+    display:none; align-items:center; justify-content:center;
+  }
+  .notify-badge.show{display:flex;}
+  .notification-list{display:flex;flex-direction:column;gap:8px;}
+  .notification-item{
+    width:100%;text-align:left;background:#fff;border:1px solid #E4D5D7;
+    border-radius:10px;padding:11px 12px;color:var(--ink);
+  }
+  .notification-item:hover{background:#FAF6F5;}
+  .notification-project{font-size:12px;font-weight:700;margin-bottom:3px;}
+  .notification-meta{font-size:10.5px;color:var(--ink-soft);margin-bottom:5px;}
+  .notification-text{font-size:12.5px;line-height:1.55;overflow-wrap:anywhere;}
+  .notification-empty{padding:28px 10px;text-align:center;color:var(--ink-soft);font-size:13px;}
+  .notification-tools{display:flex;justify-content:flex-end;margin:-4px 0 12px;}
+
+
+  /* --- Authentication fallback UI --- */
+  .login-methods{display:flex;flex-direction:column;gap:10px;}
+  .btn.secondary-login{background:#fff;color:var(--ink);border:1.5px solid var(--ink);}
+  .auth-help{margin-top:14px;padding:12px;border:1px solid var(--line);border-radius:9px;background:#FAF7F6;text-align:left;}
+  .auth-help strong{display:block;font-size:12px;margin-bottom:5px;}
+  .auth-help p{margin:0;font-size:11px;line-height:1.6;color:var(--ink-soft);}
+  .auth-debug{margin-top:10px;padding:10px;border-radius:8px;background:#FFF7F8;border:1px solid #E7C8CF;text-align:left;font-family:var(--font-mono);font-size:10px;line-height:1.55;color:#7C2440;overflow-wrap:anywhere;white-space:pre-wrap;}
+
 </style>
 </head>
 <body class="locked">
@@ -271,6 +315,7 @@
     <div class="top-actions">
       <span class="sync-status" id="syncStatus">読み込み中…</span>
       <button class="btn icon" id="refreshBtn" title="最新の状態に更新">🔄 更新</button>
+      <button class="btn icon notify-btn" id="notifyBtn" title="未読コメントを確認">🔔 通知<span class="notify-badge" id="notifyBadge"></span></button>
       <span class="user-chip" id="userChip"></span>
       <button class="btn icon" id="logoutBtn" title="Googleアカウントからログアウト">ログアウト</button>
       <button class="btn primary" id="newProjectBtn">＋ 新規案件</button>
@@ -281,21 +326,21 @@
     <div class="loading">読み込み中…</div>
   </div>
 
-  <p class="footnote">このボードは許可されたGoogleアカウントのみ閲覧・編集できます。保存内容はFirestoreを通じて2人にリアルタイム反映されます。</p>
+  <p class="footnote">このボードは許可されたGoogleアカウントのみ閲覧・編集できます。保存内容とコメント通知はFirestoreを通じて2人にリアルタイム反映されます。</p>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js';
-import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js';
 import { getFirestore, doc, getDoc, setDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js';
 
 // ============================================================
 // Firebase コンソール > プロジェクトの設定 > 全般 > マイアプリ > Webアプリ
 // に表示される firebaseConfig を、下の6項目へ貼り付けてください。
 // ============================================================
-  const firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyDCEBJN3giQRV3HB-ElqarkZCeJYXDbmo0",
   authDomain: "project-2026-4cd01.firebaseapp.com",
   projectId: "project-2026-4cd01",
@@ -346,7 +391,33 @@ function firebaseConfigReady(){
   return firebaseConfig.apiKey !== 'YOUR_API_KEY' && !firebaseConfig.projectId.startsWith('YOUR_');
 }
 
-function renderGoogleLogin(errorMsg=''){
+
+function authErrorDetails(error){
+  const code = error?.code || 'unknown';
+  const name = error?.name || 'Error';
+  const message = error?.message || 'No message';
+  const known = {
+    'auth/popup-blocked': 'ポップアップがブラウザにブロックされています。',
+    'auth/popup-closed-by-user': 'Googleログイン画面が途中で閉じられました。',
+    'auth/cancelled-popup-request': 'ログイン処理が途中でキャンセルされました。',
+    'auth/unauthorized-domain': 'このサイトのドメインがFirebase Authenticationで承認されていません。',
+    'auth/operation-not-allowed': 'Firebase AuthenticationでGoogleログインが有効になっていません。',
+    'auth/network-request-failed': 'ネットワーク通信に失敗しました。',
+    'auth/internal-error': 'Firebase Authenticationで内部エラーが発生しました。'
+  };
+  return {
+    summary: known[code] || 'Googleログインに失敗しました。',
+    debug: `code: ${code}\nname: ${name}\nmessage: ${message}`
+  };
+}
+
+function renderAuthError(error){
+  console.error('Firebase Authentication error:', error);
+  const info = authErrorDetails(error);
+  renderGoogleLogin(info.summary, info.debug);
+}
+
+function renderGoogleLogin(errorMsg='', debugMsg=''){
   document.body.classList.add('locked');
   document.getElementById('root').innerHTML = `
     <div class="panel lock-screen">
@@ -354,23 +425,52 @@ function renderGoogleLogin(errorMsg=''){
       <h3>Googleでログイン</h3>
       <p>許可された2つのGoogleアカウントだけが、この案件ボードを利用できます。</p>
       <div class="lock-error">${errorMsg ? escapeHtml(errorMsg) : ''}</div>
-      <div class="lock-actions">
-        <button class="btn primary google-login" id="googleLoginBtn"><span class="google-mark">G</span> Googleでログイン</button>
+
+      <div class="login-methods">
+        <button class="btn primary google-login" id="googlePopupLoginBtn">
+          <span class="google-mark">G</span> Googleでログイン
+        </button>
+        <button class="btn secondary-login" id="googleRedirectLoginBtn">
+          リダイレクト方式でログイン
+        </button>
       </div>
+
+      <div class="auth-help">
+        <strong>ログインできない場合</strong>
+        <p>まず上の「Googleでログイン」をお試しください。うまくいかない場合は「リダイレクト方式でログイン」を使用してください。</p>
+      </div>
+
+      ${debugMsg ? `<div class="auth-debug">${escapeHtml(debugMsg)}</div>` : ''}
       ${firebaseConfigReady() ? '' : '<div class="config-note">Firebase設定がまだ未入力です。HTML内の <b>firebaseConfig</b> に、Firebaseコンソールで表示されるWebアプリ設定を貼り付けてください。</div>'}
     </div>`;
-  const btn=document.getElementById('googleLoginBtn');
-  btn.disabled=!firebaseConfigReady();
-  btn.addEventListener('click', async()=>{
+
+  const popupBtn=document.getElementById('googlePopupLoginBtn');
+  const redirectBtn=document.getElementById('googleRedirectLoginBtn');
+  const ready=firebaseConfigReady();
+  popupBtn.disabled=!ready;
+  redirectBtn.disabled=!ready;
+
+  popupBtn.addEventListener('click', async()=>{
+    popupBtn.disabled=true;
+    redirectBtn.disabled=true;
     try{
       await signInWithPopup(auth, googleProvider);
     }catch(e){
-      console.error(e);
-      renderGoogleLogin('Googleログインに失敗しました。FirebaseのAuthorized domainsも確認してください。');
+      renderAuthError(e);
+    }
+  });
+
+  redirectBtn.addEventListener('click', async()=>{
+    popupBtn.disabled=true;
+    redirectBtn.disabled=true;
+    try{
+      sessionStorage.setItem('pm-auth-redirect-started','1');
+      await signInWithRedirect(auth, googleProvider);
+    }catch(e){
+      renderAuthError(e);
     }
   });
 }
-
 function isAllowedUser(user){
   return !!user && ALLOWED_EMAILS.includes((user.email || '').toLowerCase());
 }
@@ -425,7 +525,7 @@ async function loadData(silent){
   }
 }
 
-async function saveData(){
+async function saveData(silent=false){
   if(!authenticated || !currentUser){ showToast('ログインが必要です'); return; }
   try{
     await setDoc(boardRef,{
@@ -436,12 +536,29 @@ async function saveData(){
       updatedBy:currentUser.email || ''
     });
     document.getElementById('syncStatus').textContent='保存済み '+new Date().toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
-    showToast('保存しました');
+    if(!silent) showToast('保存しました');
   }catch(e){
     console.error(e);
     showToast('保存に失敗しました。FirestoreのSecurity Rulesを確認してください。');
   }
 }
+
+
+// リダイレクト認証から戻った後の結果・エラーを確認
+(async()=>{
+  try{
+    const result = await getRedirectResult(auth);
+    if(result){
+      sessionStorage.removeItem('pm-auth-redirect-started');
+    }else if(sessionStorage.getItem('pm-auth-redirect-started') === '1'){
+      // リダイレクト後に結果が取れないケースも診断しやすくする
+      sessionStorage.removeItem('pm-auth-redirect-started');
+    }
+  }catch(e){
+    sessionStorage.removeItem('pm-auth-redirect-started');
+    renderAuthError(e);
+  }
+})();
 
 onAuthStateChanged(auth, async user=>{
   if(!user){
@@ -462,6 +579,95 @@ onAuthStateChanged(auth, async user=>{
   document.getElementById('userChip').textContent=user.displayName || user.email || '';
   startRealtimeSync();
 });
+
+
+function currentEmail(){
+  return (currentUser?.email || '').toLowerCase();
+}
+
+function unreadComments(){
+  const email=currentEmail();
+  if(!email) return [];
+  return (state.comments || [])
+    .filter(c => (c.authorEmail || '').toLowerCase() !== email)
+    .filter(c => !Array.isArray(c.readBy) || !c.readBy.map(x=>String(x).toLowerCase()).includes(email))
+    .sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+}
+
+function updateNotificationBadge(){
+  const badge=document.getElementById('notifyBadge');
+  if(!badge) return;
+  const count=unreadComments().length;
+  badge.textContent=count > 99 ? '99+' : String(count);
+  badge.classList.toggle('show', count > 0);
+  const btn=document.getElementById('notifyBtn');
+  if(btn) btn.title=count ? `未読コメント ${count}件` : '未読コメントはありません';
+}
+
+function projectNameForComment(c){
+  return state.projects.find(p=>p.id===c.projectId)?.name || '削除された案件';
+}
+
+async function markProjectCommentsRead(projectId, silent=true){
+  const email=currentEmail();
+  if(!email) return false;
+  let changed=false;
+  (state.comments || []).forEach(c=>{
+    if(c.projectId !== projectId) return;
+    if((c.authorEmail || '').toLowerCase() === email) return;
+    const readBy=Array.isArray(c.readBy) ? [...c.readBy] : [];
+    if(!readBy.map(x=>String(x).toLowerCase()).includes(email)){
+      readBy.push(email);
+      c.readBy=readBy;
+      changed=true;
+    }
+  });
+  updateNotificationBadge();
+  if(changed) await saveData(silent);
+  return changed;
+}
+
+async function markAllCommentsRead(){
+  const email=currentEmail();
+  if(!email) return;
+  let changed=false;
+  (state.comments || []).forEach(c=>{
+    if((c.authorEmail || '').toLowerCase() === email) return;
+    const readBy=Array.isArray(c.readBy) ? [...c.readBy] : [];
+    if(!readBy.map(x=>String(x).toLowerCase()).includes(email)){
+      readBy.push(email); c.readBy=readBy; changed=true;
+    }
+  });
+  if(changed) await saveData(true);
+  closeModal();
+  updateNotificationBadge();
+  showToast('すべて既読にしました');
+}
+
+function openNotifications(){
+  const items=unreadComments();
+  openModal(`
+    <h3>通知 ${items.length ? `（未読 ${items.length}件）` : ''}</h3>
+    ${items.length ? `<div class="notification-tools"><button class="btn" id="markAllReadBtn">すべて既読</button></div>` : ''}
+    ${items.length ? `<div class="notification-list">${items.map(c=>`
+      <button class="notification-item" data-notify-project="${escapeAttr(c.projectId)}">
+        <div class="notification-project">${escapeHtml(projectNameForComment(c))}</div>
+        <div class="notification-meta">${escapeHtml(c.author || c.authorEmail || '投稿者')} ・ ${fmtDateTime(c.createdAt)}</div>
+        <div class="notification-text">${escapeHtml(c.text || '')}</div>
+      </button>`).join('')}</div>` : '<div class="notification-empty">未読コメントはありません。</div>'}
+    <div class="modal-actions"><div></div><div class="right"><button class="btn" id="closeNotifications">閉じる</button></div></div>
+  `);
+  document.getElementById('closeNotifications').addEventListener('click', closeModal);
+  const all=document.getElementById('markAllReadBtn');
+  if(all) all.addEventListener('click', markAllCommentsRead);
+  document.querySelectorAll('[data-notify-project]').forEach(btn=>btn.addEventListener('click', async()=>{
+    const projectId=btn.dataset.notifyProject;
+    selectedProjectId=projectId;
+    closeModal();
+    await markProjectCommentsRead(projectId, true);
+    render();
+  }));
+}
 
 function showToast(msg){
   const t = document.getElementById('toast');
@@ -563,6 +769,7 @@ function render(){
 
   attachListEvents();
   if(selected) attachDetailEvents(selected);
+  updateNotificationBadge();
 }
 
 function renderProjectCard(p){
@@ -645,7 +852,7 @@ function renderDetail(p){
     <div class="detail-head">
       <div>
         <h2>${escapeHtml(p.name)}</h2>
-        <div class="detail-sub">${p.client ? escapeHtml(p.client) + ' ・ ' : ''}ステータス: ${p.status} ・ 納期: ${fmtDate(p.deadline)} ・ 作成日: ${fmtDate(p.createdAt)}</div>
+        <div class="detail-sub">${p.client ? escapeHtml(p.client) + ' ・ ' : ''}ステータス: <span class="badge ${projectStatusBadge(p.status)}">${escapeHtml(p.status)}</span> ・ 納期: ${fmtDate(p.deadline)} ・ 作成日: ${fmtDate(p.createdAt)}</div>
         ${p.memo ? `<div class="detail-memo">${escapeHtml(p.memo)}</div>` : ''}
       </div>
       <div class="detail-actions">
@@ -750,12 +957,18 @@ function renderComments(projectId){
   `;
 }
 
+function projectStatusBadge(status){
+  if(status === '完了') return 'status-done';
+  if(status === '保留') return 'status-hold';
+  return 'status-progress';
+}
+
 function taskBadgeColor(t){
-  if(t.status === '完了') return 'grey';
-  const du = daysUntil(t.deadline);
-  if(du !== null && du < 0) return 'brick';
-  if(du !== null && du <= 3) return 'amber';
-  return 'teal';
+  if(t.status === '完了') return 'status-done';
+  if(t.status === '進行中') return 'status-progress';
+  if(t.status === '未着手') return 'status-todo';
+  if(t.status === '保留') return 'status-hold';
+  return 'status-todo';
 }
 
 function renderRuler(p, ts){
@@ -811,7 +1024,7 @@ function attachListEvents(){
   document.getElementById('searchInput').addEventListener('input', e => { searchQuery = e.target.value; render(); document.getElementById('searchInput').focus(); document.getElementById('searchInput').selectionStart = document.getElementById('searchInput').value.length; });
   document.getElementById('statusFilterSelect').addEventListener('change', e => { statusFilter = e.target.value; render(); });
   document.querySelectorAll('.tab').forEach(btn => btn.addEventListener('click', () => { sortMode = btn.dataset.sort; render(); }));
-  document.querySelectorAll('.project-card').forEach(card => card.addEventListener('click', () => { selectedProjectId = card.dataset.id; render(); }));
+  document.querySelectorAll('.project-card').forEach(card => card.addEventListener('click', async () => { selectedProjectId = card.dataset.id; await markProjectCommentsRead(selectedProjectId, true); render(); }));
 }
 
 function attachDetailEvents(p){
@@ -832,6 +1045,7 @@ function attachDetailEvents(p){
 
 document.getElementById('newProjectBtn').addEventListener('click', () => openProjectModal(null));
 document.getElementById('refreshBtn').addEventListener('click', () => loadData(false));
+document.getElementById('notifyBtn').addEventListener('click', openNotifications);
 document.getElementById('logoutBtn').addEventListener('click', async () => {
   try{ await signOut(auth); }catch(e){ console.error(e); showToast('ログアウトに失敗しました'); }
 });
@@ -1022,7 +1236,8 @@ async function addComment(projectId){
     text,
     author: authorName(),
     authorEmail: currentUser.email || '',
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
+    readBy: [currentUser.email || '']
   });
   render();
   await saveData();
