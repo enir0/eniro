@@ -295,13 +295,15 @@
   .notification-tools{display:flex;justify-content:flex-end;margin:-4px 0 12px;}
 
 
-  /* --- Authentication fallback UI --- */
-  .login-methods{display:flex;flex-direction:column;gap:10px;}
-  .btn.secondary-login{background:#fff;color:var(--ink);border:1.5px solid var(--ink);}
-  .auth-help{margin-top:14px;padding:12px;border:1px solid var(--line);border-radius:9px;background:#FAF7F6;text-align:left;}
-  .auth-help strong{display:block;font-size:12px;margin-bottom:5px;}
-  .auth-help p{margin:0;font-size:11px;line-height:1.6;color:var(--ink-soft);}
-  .auth-debug{margin-top:10px;padding:10px;border-radius:8px;background:#FFF7F8;border:1px solid #E7C8CF;text-align:left;font-family:var(--font-mono);font-size:10px;line-height:1.55;color:#7C2440;overflow-wrap:anywhere;white-space:pre-wrap;}
+  /* --- Email / password authentication --- */
+  .email-login-form{display:flex;flex-direction:column;gap:12px;margin-top:6px;text-align:left;}
+  .email-login-form .field{margin:0;}
+  .email-login-form input[type=email],
+  .email-login-form input[type=password]{
+    width:100%;font-family:var(--font-body);font-size:13px;color:var(--ink);
+    border:1.5px solid var(--line);border-radius:8px;padding:10px 11px;background:#fff;
+  }
+  .email-login-note{margin-top:12px;font-size:11px;line-height:1.6;color:var(--ink-soft);}
 
 </style>
 </head>
@@ -317,7 +319,7 @@
       <button class="btn icon" id="refreshBtn" title="最新の状態に更新">🔄 更新</button>
       <button class="btn icon notify-btn" id="notifyBtn" title="未読コメントを確認">🔔 通知<span class="notify-badge" id="notifyBadge"></span></button>
       <span class="user-chip" id="userChip"></span>
-      <button class="btn icon" id="logoutBtn" title="Googleアカウントからログアウト">ログアウト</button>
+      <button class="btn icon" id="logoutBtn" title="ログアウト">ログアウト</button>
       <button class="btn primary" id="newProjectBtn">＋ 新規案件</button>
     </div>
   </header>
@@ -326,14 +328,14 @@
     <div class="loading">読み込み中…</div>
   </div>
 
-  <p class="footnote">このボードは許可されたGoogleアカウントのみ閲覧・編集できます。保存内容とコメント通知はFirestoreを通じて2人にリアルタイム反映されます。</p>
+  <p class="footnote">このボードは許可された2アカウントのみ閲覧・編集できます。保存内容とコメント通知はFirestoreを通じて2人にリアルタイム反映されます。</p>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js';
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js';
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js';
 import { getFirestore, doc, getDoc, setDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js';
 
 // ============================================================
@@ -360,8 +362,6 @@ const auth = getAuth(app);
 auth.useDeviceLanguage();
 const db = getFirestore(app);
 const boardRef = doc(db, 'boards', 'shared');
-const googleProvider = new GoogleAuthProvider();
-googleProvider.setCustomParameters({ prompt: 'select_account' });
 
 let authenticated = false;
 let currentUser = null;
@@ -391,85 +391,73 @@ function firebaseConfigReady(){
   return firebaseConfig.apiKey !== 'YOUR_API_KEY' && !firebaseConfig.projectId.startsWith('YOUR_');
 }
 
-
-function authErrorDetails(error){
+function authErrorMessage(error){
   const code = error?.code || 'unknown';
-  const name = error?.name || 'Error';
-  const message = error?.message || 'No message';
-  const known = {
-    'auth/popup-blocked': 'ポップアップがブラウザにブロックされています。',
-    'auth/popup-closed-by-user': 'Googleログイン画面が途中で閉じられました。',
-    'auth/cancelled-popup-request': 'ログイン処理が途中でキャンセルされました。',
-    'auth/unauthorized-domain': 'このサイトのドメインがFirebase Authenticationで承認されていません。',
-    'auth/operation-not-allowed': 'Firebase AuthenticationでGoogleログインが有効になっていません。',
-    'auth/network-request-failed': 'ネットワーク通信に失敗しました。',
-    'auth/internal-error': 'Firebase Authenticationで内部エラーが発生しました。'
+  const messages = {
+    'auth/invalid-credential': 'メールアドレスまたはパスワードが違います。',
+    'auth/user-disabled': 'このアカウントは無効になっています。',
+    'auth/too-many-requests': 'ログイン試行回数が多すぎます。少し時間をおいてから再度お試しください。',
+    'auth/network-request-failed': '通信に失敗しました。インターネット接続を確認してください。',
+    'auth/operation-not-allowed': 'Firebase Authenticationで「メール/パスワード」ログインが有効になっていません。'
   };
-  return {
-    summary: known[code] || 'Googleログインに失敗しました。',
-    debug: `code: ${code}\nname: ${name}\nmessage: ${message}`
-  };
+  return messages[code] || `ログインに失敗しました。（${code}）`;
 }
 
-function renderAuthError(error){
-  console.error('Firebase Authentication error:', error);
-  const info = authErrorDetails(error);
-  renderGoogleLogin(info.summary, info.debug);
-}
-
-function renderGoogleLogin(errorMsg='', debugMsg=''){
+function renderEmailLogin(errorMsg=''){
   document.body.classList.add('locked');
   document.getElementById('root').innerHTML = `
     <div class="panel lock-screen">
-      <div class="lock-icon">◉</div>
-      <h3>Googleでログイン</h3>
-      <p>許可された2つのGoogleアカウントだけが、この案件ボードを利用できます。</p>
+      <div class="lock-icon">🔐</div>
+      <h3>案件ボードにログイン</h3>
+      <p>登録済みのメールアドレスとボード専用パスワードを入力してください。</p>
       <div class="lock-error">${errorMsg ? escapeHtml(errorMsg) : ''}</div>
 
-      <div class="login-methods">
-        <button class="btn primary google-login" id="googlePopupLoginBtn">
-          <span class="google-mark">G</span> Googleでログイン
-        </button>
-        <button class="btn secondary-login" id="googleRedirectLoginBtn">
-          リダイレクト方式でログイン
-        </button>
+      <div class="email-login-form">
+        <div class="field">
+          <label>メールアドレス</label>
+          <input type="email" id="loginEmail" autocomplete="username" placeholder="example@gmail.com">
+        </div>
+        <div class="field">
+          <label>パスワード</label>
+          <input type="password" id="loginPassword" autocomplete="current-password" placeholder="パスワード">
+        </div>
+        <button class="btn primary" id="emailLoginBtn">ログイン</button>
       </div>
 
-      <div class="auth-help">
-        <strong>ログインできない場合</strong>
-        <p>まず上の「Googleでログイン」をお試しください。うまくいかない場合は「リダイレクト方式でログイン」を使用してください。</p>
+      <div class="email-login-note">
+        このボードには新規登録機能はありません。Firebase Authenticationに登録済みの2アカウントだけが利用できます。
       </div>
 
-      ${debugMsg ? `<div class="auth-debug">${escapeHtml(debugMsg)}</div>` : ''}
-      ${firebaseConfigReady() ? '' : '<div class="config-note">Firebase設定がまだ未入力です。HTML内の <b>firebaseConfig</b> に、Firebaseコンソールで表示されるWebアプリ設定を貼り付けてください。</div>'}
+      ${firebaseConfigReady() ? '' : '<div class="config-note">Firebase設定がまだ未入力です。HTML内の <b>firebaseConfig</b> を確認してください。</div>'}
     </div>`;
 
-  const popupBtn=document.getElementById('googlePopupLoginBtn');
-  const redirectBtn=document.getElementById('googleRedirectLoginBtn');
-  const ready=firebaseConfigReady();
-  popupBtn.disabled=!ready;
-  redirectBtn.disabled=!ready;
+  const emailEl=document.getElementById('loginEmail');
+  const passwordEl=document.getElementById('loginPassword');
+  const btn=document.getElementById('emailLoginBtn');
+  btn.disabled=!firebaseConfigReady();
 
-  popupBtn.addEventListener('click', async()=>{
-    popupBtn.disabled=true;
-    redirectBtn.disabled=true;
-    try{
-      await signInWithPopup(auth, googleProvider);
-    }catch(e){
-      renderAuthError(e);
+  const login = async()=>{
+    const email=emailEl.value.trim().toLowerCase();
+    const password=passwordEl.value;
+    if(!email || !password){
+      renderEmailLogin('メールアドレスとパスワードを入力してください。');
+      return;
     }
-  });
+    if(!ALLOWED_EMAILS.includes(email)){
+      renderEmailLogin('このメールアドレスはこのボードの許可アカウントではありません。');
+      return;
+    }
+    btn.disabled=true;
+    try{
+      await signInWithEmailAndPassword(auth, email, password);
+    }catch(e){
+      console.error('Firebase email/password authentication error:', e);
+      renderEmailLogin(authErrorMessage(e));
+    }
+  };
 
-  redirectBtn.addEventListener('click', async()=>{
-    popupBtn.disabled=true;
-    redirectBtn.disabled=true;
-    try{
-      sessionStorage.setItem('pm-auth-redirect-started','1');
-      await signInWithRedirect(auth, googleProvider);
-    }catch(e){
-      renderAuthError(e);
-    }
-  });
+  btn.addEventListener('click', login);
+  passwordEl.addEventListener('keydown', e=>{ if(e.key==='Enter') login(); });
 }
 function isAllowedUser(user){
   return !!user && ALLOWED_EMAILS.includes((user.email || '').toLowerCase());
@@ -543,35 +531,18 @@ async function saveData(silent=false){
   }
 }
 
-
-// リダイレクト認証から戻った後の結果・エラーを確認
-(async()=>{
-  try{
-    const result = await getRedirectResult(auth);
-    if(result){
-      sessionStorage.removeItem('pm-auth-redirect-started');
-    }else if(sessionStorage.getItem('pm-auth-redirect-started') === '1'){
-      // リダイレクト後に結果が取れないケースも診断しやすくする
-      sessionStorage.removeItem('pm-auth-redirect-started');
-    }
-  }catch(e){
-    sessionStorage.removeItem('pm-auth-redirect-started');
-    renderAuthError(e);
-  }
-})();
-
 onAuthStateChanged(auth, async user=>{
   if(!user){
     authenticated=false; currentUser=null;
     if(unsubscribeBoard){ unsubscribeBoard(); unsubscribeBoard=null; }
     document.getElementById('userChip').textContent='';
-    renderGoogleLogin();
+    renderEmailLogin();
     return;
   }
   if(!isAllowedUser(user)){
     const email=user.email || 'このアカウント';
     await signOut(auth);
-    renderGoogleLogin(`${email} はこのボードの許可アカウントではありません。`);
+    renderEmailLogin(`${email} はこのボードの許可アカウントではありません。`);
     return;
   }
   currentUser=user; authenticated=true;
