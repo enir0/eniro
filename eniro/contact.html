@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Contact｜お問い合わせ | ENIRO</title>
+    <meta
+      name="description"
+      content="ENIROへのお問い合わせ。Webサイトの制作・リニューアル・改善のご相談を無料でお受けします。"
+    />
+    <meta name="format-detection" content="telephone=no" />
+    <meta property="og:site_name" content="ENIRO" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Contact｜お問い合わせ | ENIRO" />
+    <meta
+      property="og:description"
+      content="Webサイトの制作・リニューアル・改善のご相談を無料でお受けします。まずはお気軽にお問い合わせください。"
+    />
+    <meta property="og:locale" content="ja_JP" />
+    <script>
+      try {
+        if (sessionStorage.getItem('eniro_opened')) {
+          document.documentElement.classList.add('is-opened');
+        }
+      } catch (e) {}
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="js/main.js" defer></script>
+  </head>
+  <body class="js_body">
+    <div class="m_opening js_opening">
+      <div class="m_opening_logo"><img src="img/opening-logo.svg" alt="ENIRO" class="m_opening_logo_img"></div>
+    </div>
+
+    <header class="l_header js_header">
+      <a href="index.html#top" class="l_header-logo"><img src="img/header_logo.svg" alt="ENIRO" class="l_header-logo_img" width="1386" height="246"></a>
+      <nav class="l_header-nav js_nav" aria-label="メインメニュー">
+        <ul class="l_header-nav_list">
+          <li class="l_header-nav_item">
+            <a href="index.html#about" class="l_header-nav_link">ABOUT</a>
+          </li>
+          <li class="l_header-nav_item l_header-nav_item__has-sub">
+            <a href="index.html#service" class="l_header-nav_link">SERVICE</a>
+            <ul class="l_header-nav_sub">
+              <li>
+                <a href="service.html" class="l_header-nav_sub_link">作りたいものから選ぶ</a>
+              </li>
+              <li>
+                <a href="service_issue.html" class="l_header-nav_sub_link">課題から選ぶ</a>
+              </li>
+            </ul>
+          </li>
+          <li class="l_header-nav_item">
+            <a href="index.html#works" class="l_header-nav_link">WORKS</a>
+          </li>
+          <li class="l_header-nav_item">
+            <a href="index.html#faq" class="l_header-nav_link">FAQ</a>
+          </li>
+          <li class="l_header-nav_item">
+            <a href="contact.html" class="l_header-nav_link l_header-nav_link__cta is-current">
+              CONTACT
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <button class="m_hamburger js_hamburger" aria-label="メニュー" type="button">
+        <span class="m_hamburger-bar"></span>
+        <span class="m_hamburger-bar"></span>
+      </button>
+    </header>
+
+    <main class="l_main">
+      <div class="contact_wrap">
+        <header class="contact_head m_reveal js_reveal">
+          <p class="m_section-jp m_section-jp__center">お問い合わせ</p>
+          <h1 class="m_section-title m_section-title__center">Contact</h1>
+          <p class="contact_head_desc">
+            お問い合わせ内容をご記入のうえ、「送信する」ボタンを押してください。<br />
+            送信が完了すると、確認メッセージが表示されます。
+          </p>
+        </header>
+
+        <form
+          class="contact_form m_reveal m_reveal__d1 js_reveal"
+          action="contact_thanks.html"
+          method="get"
+        >
+          <div class="contact_fields">
+            <div class="contact_row">
+              <div class="contact_row_meta">
+                <label class="contact_label" for="contact-company">会社名</label>
+                <span class="contact_badge contact_badge__optional">任意</span>
+              </div>
+              <input
+                class="contact_input"
+                id="contact-company"
+                type="text"
+                name="company"
+                autocomplete="organization"
+                placeholder="株式会社 〇〇"
+              />
+            </div>
+
+            <div class="contact_row">
+              <div class="contact_row_meta">
+                <label class="contact_label" for="contact-name">お名前</label>
+                <span class="contact_badge contact_badge__required">必須</span>
+              </div>
+              <input
+                class="contact_input"
+                id="contact-name"
+                type="text"
+                name="name"
+                autocomplete="name"
+                placeholder="例）山田　太郎"
+                required
+              />
+            </div>
+
+            <div class="contact_row">
+              <div class="contact_row_meta">
+                <label class="contact_label" for="contact-kana">フリガナ</label>
+                <span class="contact_badge contact_badge__required">必須</span>
+              </div>
+              <input
+                class="contact_input"
+                id="contact-kana"
+                type="text"
+                name="kana"
+                autocomplete="off"
+                placeholder="例）ヤマダ　タロウ"
+                required
+              />
+            </div>
+
+            <div class="contact_row">
+              <div class="contact_row_meta">
+                <label class="contact_label" for="contact-email">メールアドレス</label>
+                <span class="contact_badge contact_badge__required">必須</span>
+              </div>
+              <input
+                class="contact_input"
+                id="contact-email"
+                type="email"
+                name="email"
+                autocomplete="email"
+                placeholder="例）example@example.com"
+                required
+              />
+            </div>
+
+            <div class="contact_row">
+              <div class="contact_row_meta">
+                <label class="contact_label" for="contact-tel">電話番号</label>
+                <span class="contact_badge contact_badge__required">必須</span>
+              </div>
+              <input
+                class="contact_input"
+                id="contact-tel"
+                type="tel"
+                name="tel"
+                autocomplete="tel"
+                placeholder="例）0123-456-789"
+                required
+              />
+            </div>
+
+            <div class="contact_row">
+              <div class="contact_row_meta">
+                <label class="contact_label" for="contact-address">ご住所</label>
+                <span class="contact_badge contact_badge__optional">任意</span>
+              </div>
+              <input
+                class="contact_input"
+                id="contact-address"
+                type="text"
+                name="address"
+                autocomplete="street-address"
+                placeholder="例）千葉県香取市〇〇1-2"
+              />
+            </div>
+
+            <div class="contact_row contact_row__message">
+              <div class="contact_row_meta">
+                <label class="contact_label" for="contact-message">お問い合わせ内容</label>
+                <span class="contact_badge contact_badge__required">必須</span>
+              </div>
+              <textarea
+                class="contact_input contact_input__message"
+                id="contact-message"
+                name="message"
+                rows="8"
+                placeholder="ご相談・お問い合わせ内容をご入力ください"
+                required
+              ></textarea>
+            </div>
+          </div>
+
+          <label class="contact_agree">
+            <input type="checkbox" name="privacy" value="1" required />
+            <span>
+              <a href="privacy.html" class="contact_agree_link" target="_blank" rel="noopener noreferrer">プライバシーポリシー</a>に同意する
+            </span>
+          </label>
+
+          <div class="contact_submit">
+            <button class="contact_submit_btn" type="submit">送信する</button>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <footer class="l_footer">
+      <div class="l_footer_contents l_container">
+        <div class="l_footer-brand">
+          <p class="l_footer-logo"><img src="img/header_logo.svg" alt="ENIRO" class="l_footer-logo_img" width="1386" height="246"></p>
+          <p class="l_footer-tagline">Every color begins with a connection.</p>
+        </div>
+        <nav class="l_footer-nav" aria-label="フッターメニュー">
+          <ul class="l_footer-nav_list">
+            <li class="l_footer-nav_item">
+              <span class="l_footer-nav_jp">ENIROについて</span>
+              <a href="index.html#about" class="l_footer-nav_link">About</a>
+            </li>
+            <li class="l_footer-nav_item">
+              <span class="l_footer-nav_jp">サービス</span>
+              <a href="index.html#service" class="l_footer-nav_link">Service</a>
+            </li>
+            <li class="l_footer-nav_item">
+              <span class="l_footer-nav_jp">制作実績</span>
+              <a href="index.html#works" class="l_footer-nav_link">Works</a>
+            </li>
+            <li class="l_footer-nav_item">
+              <span class="l_footer-nav_jp">よくある質問</span>
+              <a href="index.html#faq" class="l_footer-nav_link">FAQ</a>
+            </li>
+            <li class="l_footer-nav_item">
+              <span class="l_footer-nav_jp">お問い合わせ</span>
+              <a href="contact.html" class="l_footer-nav_link">Contact</a>
+            </li>
+          </ul>
+        </nav>
+        <a href="privacy.html" class="l_footer-policy">Privacy policy</a>
+      </div>
+      <div class="l_footer_bottom">
+        <p class="l_footer-copyright">
+          <small>Copyright © 2026 ENIRO, Ltd. All Rights Reserved.</small>
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
